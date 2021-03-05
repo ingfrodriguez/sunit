@@ -5,7 +5,7 @@
     </header>
     <div class="col-md-12 card card-container" v-if="BanderaSeguridad">
       <header>
-        <h1 class="text-primary">Listado Productos</h1>
+        <h1 class="text-primary">Listado Productos x</h1>
       </header>
       <p></p>
       <b-row class="text-right">
@@ -88,7 +88,7 @@ export default {
         { key: 'Creado', sortable: true, label: 'Creado' },
         { key: 'Modificar', label: 'Modificar' },
       ],
-      items: [],
+      items: [], 
     };
   },
   computed: {
