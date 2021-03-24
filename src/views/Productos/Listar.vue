@@ -3,9 +3,9 @@
     <header class="jumbotron" v-if="!BanderaSeguridad">
       <h3>{{ content }}</h3>
     </header>
-    <div class="col-md-12 card card-container" v-if="BanderaSeguridad">
+    <div class="col-md-12  mt-3 card card-container" v-if="BanderaSeguridad">
       <header>
-        <h1 class="text-primary">Listado Productos x</h1>
+        <h1 class="text-primary">Listado Productos</h1>
       </header>
       <p></p>
       <b-row class="text-right">
@@ -64,6 +64,7 @@
 <script>
 import axios from 'axios';
 import UserService from '../../services/user.service';
+import authHeader from '../../services/auth-header';
 
 export default {
   name: 'Register',
@@ -92,15 +93,12 @@ export default {
     };
   },
   computed: {
-    total:function(){
-      return this.totalRows = this.items.length //cambiar
-    }
   },
   mounted() {
     
-    axios.get(this.$IPServidor + '/api/ListarProductos').then((response) => {
+    axios.get(this.$IPServidor + '/api/ListarProductos',{ headers: authHeader()}).then((response) => {
       this.items = response.data;
-      this.totalRows = this.items.length //cambiar
+      this.totalRows = this.items.length
     });
 
 

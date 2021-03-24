@@ -19,13 +19,7 @@
                     Ventas Board
                 </b-dropdown-item>
               </b-nav-item-dropdown>
-              <b-nav-item-dropdown text="Administración"  v-if="showAdminMenu">
-                <b-dropdown-group id="dropdown-group-1" header="Funciones Principales">
-                  <b-dropdown-item href="/admin" >
-                      Admin Board
-                  </b-dropdown-item>
-                </b-dropdown-group>
-                <b-dropdown-divider></b-dropdown-divider>
+              <b-nav-item-dropdown text="Mantenimientos"  v-if="showAdminMenu">
                 <b-dropdown-group id="dropdown-group-2" header="Categorias Productos">
                   <b-dropdown-item href="/Categorias/Crear">
                       Crear 
@@ -41,6 +35,31 @@
                   </b-dropdown-item>
                   <b-dropdown-item href="/Productos/Listar">
                       Listar
+                  </b-dropdown-item>
+                </b-dropdown-group>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-group id="dropdown-group-2" header="Categorias Proveedores">
+                  <b-dropdown-item href="/Proveedores/CrearCategorias">
+                      Crear 
+                  </b-dropdown-item>
+                  <b-dropdown-item href="/Proveedores/ListarCategorias">
+                      Listar
+                  </b-dropdown-item>
+                </b-dropdown-group>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-group id="dropdown-group-2" header="Proveedores">
+                  <b-dropdown-item href="/Proveedores/CrearProveedor">
+                      Crear 
+                  </b-dropdown-item>
+                  <b-dropdown-item href="/Proveedores/ListarProveedores">
+                      Listar
+                  </b-dropdown-item>
+                </b-dropdown-group>
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown text="Administración"  v-if="showAdminMenu">
+                <b-dropdown-group id="dropdown-group-1" header="Funciones Principales">
+                  <b-dropdown-item href="/admin" >
+                      Admin Board
                   </b-dropdown-item>
                 </b-dropdown-group>
               </b-nav-item-dropdown>
@@ -72,7 +91,6 @@
           </b-collapse>
         </b-navbar>
       </div>
-    
     <!--
     
     <nav class="navbar navbar-expand navbar-dark bg-dark">

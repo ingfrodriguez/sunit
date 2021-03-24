@@ -3,9 +3,9 @@
     <header class="jumbotron"  v-if="!BanderaSeguridad">
       <h3>{{content}}</h3>
     </header>
-    <div class="col-md-12 mt-3  card card-container" v-if="BanderaSeguridad" >
+    <div class="col-md-12  mt-3 card card-container" v-if="BanderaSeguridad" >
         <header >
-          <h1  class="text-primary">Crear categoria Producto</h1>
+          <h1  class="text-primary">Crear Categoria Proveedores</h1>
         </header>
         <form name="form" @submit.prevent="handle">
           <div v-if="!successful">          
@@ -43,7 +43,6 @@ import axios from 'axios';
 import UserService from '../../services/user.service';
 import authHeader from '../../services/auth-header';
 export default {
-  name: 'Register',
   data() {
     return {
       content:'',
@@ -78,13 +77,13 @@ export default {
       this.$validator.validate().then(isValid => {
         if (isValid) {
           axios
-          .post(this.$IPServidor+'/api/CrearCategoriaProducto',{
+          .post(this.$IPServidor+'/api/CrearCategoriaProveedor',{
             Nombre: this.Nombre
           },{ headers: authHeader()})
           .then(response => {
             this.mensaje=response.data.message;
             this.successful = true;
-            this.$router.push('/categorias/listar');
+            this.$router.push('/Proveedores/ListarCategorias');
           })
           .catch( error => {
               this.mensaje=error.response.data.message;

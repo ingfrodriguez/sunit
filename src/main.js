@@ -5,8 +5,8 @@ import App from './App.vue';
 import { router } from './router';
 import store from './store';
 import 'bootstrap';
-
-import VeeValidate from 'vee-validate';
+import VeeValidate, { Validator } from "vee-validate";
+import es from 'vee-validate/dist/locale/es'
 import Vuex from 'vuex';
 import {BootstrapVue,IconsPlugin} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -32,6 +32,8 @@ Vue.config.productionTip = false;
 
 
 Vue.use(VeeValidate,{ fieldsBagName: 'veeFields'});
+Validator.localize("es", es);
+
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.prototype.$IPServidor = 'http://10.161.151.8:8080'

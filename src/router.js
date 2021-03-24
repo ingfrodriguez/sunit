@@ -120,6 +120,43 @@ export const router = new Router({
       meta: {
         title: 'Listado Categorias Productos'
       }
+    },
+    //-------------------PROVEEDORES-------------------
+    {
+      path: '/proveedores/CrearProveedor',
+      name: 'CrearProveedor',
+      // lazy-loaded
+      component: () => import('./views/Proveedores/CrearProveedor.vue'),
+      meta: {
+        title: 'Crear Proveedor'
+      }
+    },
+    {
+      path: '/proveedores/ListarProveedores',
+      name: 'ListarProveedores',
+      // lazy-loaded
+      component: () => import('./views/Proveedores/ListarProveedores.vue'),
+      meta: {
+        title: 'Listar Proveedores Proveedor'
+      }
+    },
+    {
+      path: '/proveedores/CrearCategorias',
+      name: 'crearcategorias',
+      // lazy-loaded
+      component: () => import('./views/Proveedores/CrearCategorias.vue'),
+      meta: {
+        title: 'Crear Categorias Proveedores'
+      }
+    },
+    {
+      path: '/proveedores/ListarCategorias',
+      name: 'listarcategoriasproveedores',
+      // lazy-loaded
+      component: () => import('./views/Proveedores/ListarCategorias.vue'),
+      meta: {
+        title: 'Listado Categorias Proveedores'
+      }
     }
   ]
 });

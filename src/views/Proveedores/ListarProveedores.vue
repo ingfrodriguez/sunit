@@ -5,7 +5,7 @@
     </header>
     <div class="col-md-12 mt-3  card card-container" v-if="BanderaSeguridad">
       <header>
-        <h1 class="text-primary">Listado categorias Productos</h1>
+        <h1 class="text-primary">Listado Proveedores</h1>
       </header>
       <p></p>
       <b-table striped hover :items="items" :fields="fields" responsive></b-table>
@@ -23,14 +23,14 @@ export default {
     return {
       content: '',
       BanderaSeguridad: false,
-      fields: ['id', 'Nombre', 'createdAt'],
+      fields: ['id', 'NIT', 'Nombre','TelefonoPrincipal','createdAt'],
       items: []
     };
   },
   computed: {},
   mounted() {
     axios
-      .get(this.$IPServidor+'/api/ListarCategoriaProducto',{ headers: authHeader()})
+      .get(this.$IPServidor+'/api/ListarProveedores',{ headers: authHeader()})
       .then((response) => {
         this.items = response.data;
       });

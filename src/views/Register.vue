@@ -58,7 +58,7 @@
             <label for="password">Password</label>
             <input
               v-model="user.password"
-              v-validate="'required|min:6|max:40'"
+              v-validate="'required|min:6|max:50'"
               type="password"
               class="form-control"
               name="password"

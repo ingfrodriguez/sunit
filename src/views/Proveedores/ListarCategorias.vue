@@ -3,9 +3,9 @@
     <header class="jumbotron" v-if="!BanderaSeguridad">
       <h3>{{ content }}</h3>
     </header>
-    <div class="col-md-12 mt-3  card card-container" v-if="BanderaSeguridad">
+    <div class="col-md-12  mt-3  card card-container" v-if="BanderaSeguridad">
       <header>
-        <h1 class="text-primary">Listado categorias Productos</h1>
+        <h1 class="text-primary">Listado Categorias Proveedores</h1>
       </header>
       <p></p>
       <b-table striped hover :items="items" :fields="fields" responsive></b-table>
@@ -30,7 +30,7 @@ export default {
   computed: {},
   mounted() {
     axios
-      .get(this.$IPServidor+'/api/ListarCategoriaProducto',{ headers: authHeader()})
+      .get(this.$IPServidor+'/api/ListarCategoriasProveedores',{ headers: authHeader()})
       .then((response) => {
         this.items = response.data;
       });
