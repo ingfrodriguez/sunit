@@ -132,6 +132,15 @@ export const router = new Router({
       }
     },
     {
+      path: '/proveedores/ModificarProveedor',
+      name: 'ModificarProveedor',
+      // lazy-loaded
+      component: () => import('./views/Proveedores/ModificarProveedor.vue'),
+      meta: {
+        title: 'Modificar Proveedor'
+      }
+    },
+    {
       path: '/proveedores/ListarProveedores',
       name: 'ListarProveedores',
       // lazy-loaded
@@ -156,6 +165,34 @@ export const router = new Router({
       component: () => import('./views/Proveedores/ListarCategorias.vue'),
       meta: {
         title: 'Listado Categorias Proveedores'
+      }
+    },
+    //-------------------VENDEDORES-------------------
+    {
+      path: '/vendedores/CrearVendedor',
+      name: 'CrearVendedor',
+      // lazy-loaded
+      component: () => import('./views/Vendedores/CrearVendedor.vue'),
+      meta: {
+        title: 'Crear Vendedor'
+      }
+    },
+    {
+      path: '/vendedores/ModificarVendedor',
+      name: 'ModificarVendedor',
+      // lazy-loaded
+      component: () => import('./views/Vendedores/ModificarVendedor.vue'),
+      meta: {
+        title: 'Modificar Vendedor'
+      }
+    },
+    {
+      path: '/vendedores/ListarVendedores',
+      name: 'ListarVendedores',
+      // lazy-loaded
+      component: () => import('./views/Vendedores/ListarVendedores.vue'),
+      meta: {
+        title: 'Listar Vendedores'
       }
     }
   ]

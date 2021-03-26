@@ -11,7 +11,7 @@ import Vuex from 'vuex';
 import {BootstrapVue,IconsPlugin} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
- 
+import './assets/css/main.css'; 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
@@ -36,7 +36,8 @@ Validator.localize("es", es);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-Vue.prototype.$IPServidor = 'http://10.161.151.8:8080'
+//Vue.prototype.$IPServidor = 'http://10.161.151.8:8080'
+Vue.prototype.$IPServidor = 'http://192.168.232.98:8080'
 Vue.use(Vuex);
 
 new Vue({

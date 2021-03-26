@@ -4,9 +4,21 @@
       <h3>{{ content }}</h3>
     </header>
     <div class="col-md-12  mt-3  card card-container" v-if="BanderaSeguridad">
-      <header>
-        <h1 class="text-primary">Listado Categorias Proveedores</h1>
-      </header>
+      <b-row>
+          <b-col cols="9">
+            <header>
+              <b-row class="mb-4" align-v="center">
+                      <b-col md="2" ><b-avatar variant="primary" icon="folder"></b-avatar></b-col>
+                      <b-col md="10"><h1  class="text-primary ">Listado Categorias Proveedores</h1></b-col>
+              </b-row>
+            </header>
+          </b-col>
+          <b-col cols="3">
+            <b-button href="CrearCategorias" variant="light"
+              >Crear Categoria<b-icon font-scale="1" icon="plus"></b-icon
+            ></b-button>
+          </b-col>
+      </b-row>
       <p></p>
       <b-table striped hover :items="items" :fields="fields" responsive></b-table>
     </div>
@@ -53,24 +65,3 @@ export default {
   methods: {},
 };
 </script>
-
-
-<style scoped>
-.card-container.card {
-  max-width: 850px !important;
-  padding: 40px 40px;
-}
-
-.card {
-  background-color: #f7f7f7;
-  padding: 20px 25px 30px;
-  margin: 0 auto 25px;
-  margin-top: 50px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-}
-</style>

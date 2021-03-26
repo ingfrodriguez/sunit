@@ -20,39 +20,27 @@
                 </b-dropdown-item>
               </b-nav-item-dropdown>
               <b-nav-item-dropdown text="Mantenimientos"  v-if="showAdminMenu">
-                <b-dropdown-group id="dropdown-group-2" header="Categorias Productos">
-                  <b-dropdown-item href="/Categorias/Crear">
-                      Crear 
-                  </b-dropdown-item>
-                  <b-dropdown-item href="/Categorias/Listar">
-                      Listar
-                  </b-dropdown-item>
-                </b-dropdown-group>
-                <b-dropdown-divider></b-dropdown-divider>
                 <b-dropdown-group id="dropdown-group-2" header="Productos">
-                  <b-dropdown-item href="/Productos/Crear">
-                      Crear 
+                  <b-dropdown-item href="/Categorias/Listar">
+                      Categorias de Productos
                   </b-dropdown-item>
                   <b-dropdown-item href="/Productos/Listar">
-                      Listar
-                  </b-dropdown-item>
-                </b-dropdown-group>
-                <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-group id="dropdown-group-2" header="Categorias Proveedores">
-                  <b-dropdown-item href="/Proveedores/CrearCategorias">
-                      Crear 
-                  </b-dropdown-item>
-                  <b-dropdown-item href="/Proveedores/ListarCategorias">
-                      Listar
+                      Productos
                   </b-dropdown-item>
                 </b-dropdown-group>
                 <b-dropdown-divider></b-dropdown-divider>
                 <b-dropdown-group id="dropdown-group-2" header="Proveedores">
-                  <b-dropdown-item href="/Proveedores/CrearProveedor">
-                      Crear 
+                  <b-dropdown-item href="/Proveedores/ListarCategorias">
+                      Categorias Proveedor
                   </b-dropdown-item>
                   <b-dropdown-item href="/Proveedores/ListarProveedores">
-                      Listar
+                      Proveedores
+                  </b-dropdown-item>
+                </b-dropdown-group>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-group id="dropdown-group-2" header="Vendedores">
+                  <b-dropdown-item href="/Vendedores/ListarVendedores">
+                      Vendedores
                   </b-dropdown-item>
                 </b-dropdown-group>
               </b-nav-item-dropdown>

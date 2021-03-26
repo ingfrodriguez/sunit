@@ -5,26 +5,32 @@
     </header>
     <div class="col-md-12 mt-3  card card-container" v-if="BanderaSeguridad" >
         <header >
-          <h1  class="text-primary">Crear categoria Producto</h1>
+          <b-row class="mb-4" align-v="center">
+            <b-col md="1" ><b-avatar variant="primary" icon="folder"></b-avatar></b-col>
+            <b-col md="11"><h1  class="text-primary ">Crear categoria Producto</h1></b-col>
+          </b-row>
         </header>
+
+        
         <form name="form" @submit.prevent="handle">
           <div v-if="!successful">          
             <div class="form-group">
-              <label for="Nombre">Nombre</label>
-              <input
-                v-model="Nombre"
-                v-validate="'required|min:3|max:70'"
-                type="Nombre"
-                class="form-control"
-                name="Nombre"
-              />
-              <div
-                v-if="submitted && errors.has('Nombre')"
-                class="alert-danger"
-              >{{errors.first('Nombre')}}</div>
+              <b-input-group prepend="Nombre" class="mb-2">
+                <input
+                  v-model="Nombre"
+                  v-validate="'required|min:3|max:70'"
+                  type="Nombre"
+                  class="form-control"
+                  name="Nombre"
+                />
+                <div
+                  v-if="submitted && errors.has('Nombre')"
+                  class="alert-danger"
+                >{{errors.first('Nombre')}}</div>
+              </b-input-group>
             </div>
             <div class="form-group">
-              <button class="btn btn-primary btn-block">Crear</button>
+              <button class="btn boton-tamano btn-primary btn-block">Crear</button>
             </div>
           </div>
         </form>
@@ -98,22 +104,8 @@ export default {
 </script>
 
 
-<style scoped>
-.card-container.card {
-  max-width: 550px !important;
-  padding: 40px 40px;
-}
-
-.card {
-  background-color: #f7f7f7;
-  padding: 20px 25px 30px;
-  margin: 0 auto 25px;
-  margin-top: 50px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+<style>
+.form-group{
+  width:500px;
 }
 </style>

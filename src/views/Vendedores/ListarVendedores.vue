@@ -12,14 +12,14 @@
                 ><b-avatar variant="primary" icon="person"></b-avatar
               ></b-col>
               <b-col md="10"
-                ><h1 class="text-primary">Listado Proveedores</h1></b-col
+                ><h1 class="text-primary">Listado Vendedores</h1></b-col
               >
             </b-row>
           </header>
         </b-col>
         <b-col cols="3">
-          <b-button href="CrearProveedor" variant="light"
-            >Crear Proveedor<b-icon font-scale="1" icon="person-plus"></b-icon
+          <b-button href="CrearVendedor" variant="light"
+            >Crear Vendedor<b-icon font-scale="1" icon="person-plus"></b-icon
           ></b-button>
         </b-col>
       </b-row>
@@ -28,7 +28,7 @@
           <b-form-input
               v-model="filter"
               type="search"
-              placeholder="Filtrar proveedores"
+              placeholder="Filtrar "
           ></b-form-input>
         </b-col>
       </b-row>
@@ -45,12 +45,12 @@
       >
         <template #cell(Modificar)="data">
           <b-link
-            :to="{ name: 'ModificarProveedor', params: { id: data.item.id,ver:true } }"
+            :to="{ name: 'ModificarVendedor', params: { id: data.item.id,ver:true } }"
             ><b-button variant="outline-secondary" size="sm"
               ><b-icon font-scale="1" icon="search"></b-icon></b-button
           ></b-link>
           <b-link
-            :to="{ name: 'ModificarProveedor', params: { id: data.item.id } }"
+            :to="{ name: 'ModificarVendedor', params: { id: data.item.id } }"
             ><b-button variant="outline-secondary" size="sm"
               ><b-icon font-scale="1" icon="pencil-fill"></b-icon></b-button
           ></b-link>
@@ -84,9 +84,9 @@ export default {
       content: '',
       BanderaSeguridad: false,
       fields: [
-        { key: 'NIT', sortable: true },
         { key: 'Nombre', sortable: true },
-        { key: 'TelefonoPrincipal', sortable: false,label: 'Tel Principal' },
+        { key: 'Telefono', sortable: false,label: 'Telefono' },
+        { key: 'Celular', sortable: false,label: 'Telefono' },
         { key: 'createdAt', sortable: true, label: 'Creado' },
         { key: 'Modificar', label: 'Modificar' }
       ],
@@ -100,7 +100,7 @@ export default {
   computed: {},
   mounted() {
     axios
-      .get(this.$IPServidor + '/api/ListarProveedores', {
+      .get(this.$IPServidor + '/api/ListarVendedores', {
         headers: authHeader(),
       })
       .then((response) => {

@@ -5,11 +5,14 @@
     </header>
     <div class="col-md-12  mt-3 card card-container" v-if="BanderaSeguridad">
       <header>
-        <h1 class="text-primary">Listado Productos</h1>
+        <b-row class="mb-4" align-v="center">
+                <b-col md="2" ><b-avatar variant="primary" icon="screwdriver"></b-avatar></b-col>
+                <b-col md="10"><h1  class="text-primary ">Listado Productos</h1></b-col>
+        </b-row>
       </header>
       <p></p>
       <b-row class="text-right">
-        <b-col cols="8">
+        <b-col cols="8"  class="mb-3">
           <b-form-input
               v-model="filter"
               type="search"
@@ -38,6 +41,11 @@
         </template>
         <template #cell(Modificar)="data">
           <b-link
+            :to="{ name: 'modificarproductos', params: { id: data.item.id,ver:true } }"
+            ><b-button variant="outline-secondary" size="sm"
+              ><b-icon font-scale="1" icon="search"></b-icon></b-button
+          ></b-link>
+          <b-link
             :to="{ name: 'modificarproductos', params: { id: data.item.id } }"
             ><b-button variant="outline-secondary" size="sm"
               ><b-icon font-scale="1" icon="pencil-fill"></b-icon></b-button
@@ -45,7 +53,7 @@
         </template>
       </b-table>
       <b-row>
-        <b-col sm="7" md="6">
+        <b-col sm="7" md="6"  class="mt-2">
           <b-pagination
             v-model="currentPage"
             :total-rows="totalRows"
@@ -72,7 +80,7 @@ export default {
     return {
       content: '',
       filter:null,
-      perPage: 5,
+      perPage: 10,
       totalRows: 1,
       currentPage: 1,
       BanderaSeguridad: false,
@@ -132,23 +140,3 @@ export default {
 };
 </script>
 
-
-<style scoped>
-.card-container.card {
-  max-width: 1050px !important;
-  padding: 40px 40px;
-}
-
-.card {
-  background-color: #f7f7f7;
-  padding: 20px 25px 30px;
-  margin: 0 auto 25px;
-  margin-top: 50px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
-  -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
-}
-</style>

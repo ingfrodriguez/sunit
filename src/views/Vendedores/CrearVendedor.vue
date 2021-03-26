@@ -7,7 +7,7 @@
         <header >
         <b-row class="mb-4" align-v="center">
           <b-col md="1" ><b-avatar variant="primary" icon="people-fill"></b-avatar></b-col>
-          <b-col md="11"><h1  class="text-primary ">Crear Proveedores</h1></b-col>
+          <b-col md="11"><h1  class="text-primary ">Crear Vendedor</h1></b-col>
         </b-row>
         </header>
         <form name="form" @submit.prevent="handle">
@@ -15,57 +15,10 @@
             <div class="form-group">
               <b-container class="bv-example-row">
               <b-row>
-                <b-col  md="6">
-                  <b-input-group prepend="NIT" class="mb-2">
-                  <input
-                    v-model="Proveedor.NIT"
-                    v-validate="'required|min:3|max:70'"
-                    class="form-control"
-                    name="NIT"
-                    placeholder="Ingreselo tal y como saldrá en la factura"
-                  />
-                  </b-input-group>
-                  <div
-                    v-if="submitted && errors.has('NIT')"
-                    class="alert-danger"
-                  >{{errors.first('NIT')}}</div>
-                </b-col>
-                <b-col md="6">
-                  <b-input-group prepend="Razón Social" class="mb-2">
-                  <input
-                    v-model="Proveedor.RazonSocial"
-                    v-validate="'required|min:3|max:70'"
-                    class="form-control"
-                    name="RazonSocial"
-                    placeholder="Ingreselo tal y como saldrá en la factura"
-                  />
-                  </b-input-group>
-                  <div
-                    v-if="submitted && errors.has('RazonSocial')"
-                    class="alert-danger"
-                  >{{errors.first('RazonSocial')}}</div>
-                </b-col>
-              </b-row>
-              <b-row class="mt-2">
-                <b-col md="6">
-                  <b-input-group prepend="Dirección Comercial" class="mb-2">
-                  <input
-                    v-model="Proveedor.DireccionComercial"
-                    v-validate="'required|min:3|max:70'"
-                    type="text"
-                    class="form-control"
-                    name="DireccionComercial"
-                  />
-                  </b-input-group>
-                  <div
-                    v-if="submitted && errors.has('DireccionComercial')"
-                    class="alert-danger"
-                  >{{errors.first('DireccionComercial')}}</div>
-                </b-col>
                 <b-col md="6">
                   <b-input-group prepend="Nombre" class="mb-2">
                   <input
-                    v-model="Proveedor.Nombre"
+                    v-model="Vendedor.Nombre"
                     v-validate="'required|min:3|max:70'"
                     type="text"
                     class="form-control"
@@ -77,79 +30,95 @@
                     class="alert-danger"
                   >{{errors.first('Nombre')}}</div>
                 </b-col>
-              </b-row>
-              <b-row class="mt-2">
                 <b-col md="6">
-                  <b-input-group prepend="Comentarios" class="mb-2">
-                  <b-form-textarea
-                    v-model="Proveedor.Comentarios"
-                      rows="2"
-                      max-rows="6"
-                  ></b-form-textarea>
-                  </b-input-group>
-                </b-col>
-                <b-col md="6">
-                 <b-input-group prepend="Teléfono Principal" class="mb-2">
+                 <b-input-group prepend="Teléfono" class="mb-2">
                   <input
-                    v-model="Proveedor.TelefonoPrincipal"
+                    v-model="Vendedor.Telefono"
                     v-validate="'required|numeric'"
                     type="tel"
                     class="form-control"
-                    name="TelefonoPrincipal"
+                    name="Telefono"
                   />
                  </b-input-group>
                   <div
-                    v-if="submitted && errors.has('TelefonoPrincipal')"
+                    v-if="submitted && errors.has('Telefono')"
                     class="alert-danger"
-                  >{{errors.first('TelefonoPrincipal')}}</div>
+                  >{{errors.first('Telefono')}}</div>
                 </b-col>
-              </b-row>
-              <b-row class="mt-2">
                 <b-col md="6">
-                  <b-input-group prepend="Horario Laboral" class="mb-2">
-                  <b-form-input
-                    v-model="Proveedor.HorarioLaboral"
-                    type="text"
+                 <b-input-group prepend="Celular" class="mb-2">
+                  <input
+                    v-model="Vendedor.Celular"
+                    type="tel"
                     class="form-control"
-                    name="HorarioLaboral"
-                  ></b-form-input>
-                  </b-input-group>
+                    name="Celular"
+                  />
+                 </b-input-group>
                 </b-col>
                 <b-col md="6">
-                  <b-input-group prepend="Maneja Crédito" class="mb-2">
-                  <b-form-checkbox
-                    v-model="Proveedor.ManejaCredito"
-                    type="checkbox"
-                    name="Activo"
-                    class="ml-2"
-                  ></b-form-checkbox>
-                  </b-input-group>
+                 <b-input-group prepend="Domicilio" class="mb-2">
+                  <input
+                    v-model="Vendedor.Domicilio"
+                    v-validate="'required'"
+                    type="tel"
+                    class="form-control"
+                    name="Domicilio"
+                  />
+                 </b-input-group>
+                  <div
+                    v-if="submitted && errors.has('Domicilio')"
+                    class="alert-danger"
+                  >{{errors.first('Domicilio')}}</div>
                 </b-col>
-              </b-row>
-              <b-row class="mt-2">
                 <b-col md="6">
                   <b-input-group prepend="Correo Electrónico" class="mb-2">
                   <input
-                    v-model="Proveedor.Email"
+                    v-model="Vendedor.Email"
                     type="Email"
                     class="form-control"
                     name="Email"
                   />
                   </b-input-group>
                 </b-col>
-              </b-row>
-              <b-row class="mt-4">
-                <b-col>
-                  <label>Seleccione Categorias</label>
-                  <b-form-checkbox-group
-                  v-model="Proveedor.categoriasproveedor"
-                  :options="Categorias"
-                  class="mb-3"
-                  value-field="id"
-                  text-field="Nombre"
-                  switches
-                ></b-form-checkbox-group>
+              
+                <b-col md="6">
+                  <b-input-group prepend="Horario Laboral" class="mb-2">
+                  <b-form-input
+                    v-model="Vendedor.HorarioLaboral"
+                    type="text"
+                    class="form-control"
+                    name="HorarioLaboral"
+                  ></b-form-input>
+                  </b-input-group>
                 </b-col>
+                
+                <b-col md="6">
+                 <b-input-group prepend="Comisión Asignada" class="mb-2">
+                  <input
+                    v-model="Vendedor.ComisionAsignada"
+                    v-validate="'required|decimal:2'"
+                    type="number"
+                    class="form-control"
+                    name="ComisionAsignada"
+                  />
+                 </b-input-group>
+                  <div
+                    v-if="submitted && errors.has('ComisionAsignada')"
+                    class="alert-danger"
+                  >{{errors.first('ComisionAsignada')}}</div>
+                </b-col>
+                
+                <b-col md="6">
+                  <b-input-group prepend="Comentarios" class="mb-2">
+                  <b-form-textarea
+                    v-model="Vendedor.Comentarios"
+                      rows="2"
+                      max-rows="6"
+                  ></b-form-textarea>
+                  </b-input-group>
+                </b-col>
+                
+                
               </b-row>
               <b-row class="mt-4">
                 <b-col>
@@ -245,17 +214,15 @@ export default {
       successful: false,
       mensaje:'',
       Categorias: [],
-      Proveedor: {
-        NIT: '',
-        RazonSocial:'',
-        DireccionComercial:'',
-        Nombre: '',
-        Email: '',
-        ManejaCredito:false,
+      Vendedor: {
+        Nombre: null,
+        Telefono: null,
+        Celular: null,
+        Domicilio: null,
+        Email: null,
         Comentarios:'',
-        TelefonoPrincipal:0,
         HorarioLaboral:'Lunes a Viernes de 8:00 A.m. a 5:00 p.m.',
-        categoriasproveedor:[]
+        ComisionAsignada:null
       },
       Contactos:[
       
@@ -265,11 +232,7 @@ export default {
   computed: {
   },
   mounted() {     
-    axios
-    .get(this.$IPServidor + '/api/ListarCategoriasProveedores',{ headers: authHeader()})
-    .then((response) => {
-      this.Categorias = response.data;
-    }); 
+    
     UserService.getAdminBoard().then(
       response => {
         this.content = response.data;
@@ -311,16 +274,16 @@ export default {
           axios({
             method:'POST',
             headers: authHeader(),
-            url:this.$IPServidor + '/api/CrearProveedor',
+            url:this.$IPServidor + '/api/CrearVendedor',
             data:{
-              Proveedor:this.Proveedor,
+              Vendedor:this.Vendedor,
               Contactos:this.Contactos
             }
           })
           .then(response => {
             this.mensaje=response.data.message;
             this.successful = true;
-            this.$router.push('/Proveedores/ListarProveedores');
+            this.$router.push('/Vendedores/ListarVendedores');
           })
           .catch( error => {
               this.mensaje=error.response.data.message;

@@ -7,11 +7,11 @@
         <header >
         <b-row class="mb-4" align-v="center">
           <b-col md="1" ><b-avatar variant="primary" icon="people-fill"></b-avatar></b-col>
-          <b-col md="11"><h1  class="text-primary ">Crear Proveedores</h1></b-col>
+          <b-col md="11"><h1  class="text-primary ">{{titulo}}</h1></b-col>
         </b-row>
         </header>
         <form name="form" @submit.prevent="handle">
-          <div v-if="!successful">          
+          <div v-if="!successful">
             <div class="form-group">
               <b-container class="bv-example-row">
               <b-row>
@@ -23,6 +23,7 @@
                     class="form-control"
                     name="NIT"
                     placeholder="Ingreselo tal y como saldrá en la factura"
+                    disabled
                   />
                   </b-input-group>
                   <div
@@ -38,6 +39,7 @@
                     class="form-control"
                     name="RazonSocial"
                     placeholder="Ingreselo tal y como saldrá en la factura"
+                    :disabled =BanderaVer
                   />
                   </b-input-group>
                   <div
@@ -55,6 +57,7 @@
                     type="text"
                     class="form-control"
                     name="DireccionComercial"
+                    :disabled =BanderaVer
                   />
                   </b-input-group>
                   <div
@@ -70,6 +73,7 @@
                     type="text"
                     class="form-control"
                     name="Nombre"
+                    :disabled =BanderaVer
                   />
                   </b-input-group>
                   <div
@@ -85,6 +89,7 @@
                     v-model="Proveedor.Comentarios"
                       rows="2"
                       max-rows="6"
+                      :disabled =BanderaVer
                   ></b-form-textarea>
                   </b-input-group>
                 </b-col>
@@ -96,6 +101,7 @@
                     type="tel"
                     class="form-control"
                     name="TelefonoPrincipal"
+                    :disabled =BanderaVer
                   />
                  </b-input-group>
                   <div
@@ -112,6 +118,7 @@
                     type="text"
                     class="form-control"
                     name="HorarioLaboral"
+                    :disabled =BanderaVer
                   ></b-form-input>
                   </b-input-group>
                 </b-col>
@@ -121,6 +128,7 @@
                     v-model="Proveedor.ManejaCredito"
                     type="checkbox"
                     name="Activo"
+                    :disabled =BanderaVer
                     class="ml-2"
                   ></b-form-checkbox>
                   </b-input-group>
@@ -133,6 +141,7 @@
                     v-model="Proveedor.Email"
                     type="Email"
                     class="form-control"
+                    :disabled =BanderaVer
                     name="Email"
                   />
                   </b-input-group>
@@ -145,16 +154,18 @@
                   v-model="Proveedor.categoriasproveedor"
                   :options="Categorias"
                   class="mb-3"
+                  :disabled =BanderaVer
                   value-field="id"
                   text-field="Nombre"
                   switches
+                  
                 ></b-form-checkbox-group>
                 </b-col>
               </b-row>
               <b-row class="mt-4">
                 <b-col>
-                  <h2>Contactos</h2><b-icon font-scale="1" icon="person-plus" class="mr-2"></b-icon>
-                  <b-link class="colorx" v-on:click="agregar">Agregar Contacto</b-link >
+                  <h2>Contactos</h2><b-icon  v-if="!BanderaVer" font-scale="1" icon="person-plus" class="mr-2"></b-icon>
+                  <b-link  v-if="!BanderaVer" class="colorx" v-on:click="agregar">Agregar Contacto</b-link >
                 </b-col>
               </b-row>
               
@@ -205,7 +216,7 @@
                     <b-col cols="10">
                     </b-col>
                     <b-col cols="2">
-                      <b-icon font-scale="0" icon="trash" v-on:click="borrar(item.numero)"></b-icon>
+                      <b-icon  v-if="!BanderaVer" font-scale="0" icon="trash" v-on:click="borrar(item.numero)"></b-icon>
                     </b-col>
                   </b-row>
                 </b-col>
@@ -214,7 +225,7 @@
 
               <b-row>
                 <b-col>
-                  <button class="btn btn-primary mt-4">Crear</button>
+                  <button v-if="!BanderaVer" class="btn btn-primary mt-4">Modificar</button>
                 </b-col>
               </b-row>
               </b-container>
@@ -241,9 +252,11 @@ export default {
       content:'',
       idContacto:0,
       BanderaSeguridad:false,
+      BanderaVer:false,
       submitted: false,
       successful: false,
       mensaje:'',
+      titulo:'Modificar Proveedores',
       Categorias: [],
       Proveedor: {
         NIT: '',
@@ -264,7 +277,29 @@ export default {
   },
   computed: {
   },
-  mounted() {     
+  mounted() {    
+    this.BanderaVer= this.$route.params.ver
+    if (this.BanderaVer) this.titulo ='Ver Proveedor' 
+    axios
+      .get(this.$IPServidor + '/api/verproveedor', {
+        params: {
+          id: this.$route.params.id,
+        },
+        headers: authHeader(),
+      })
+      .then((response) => {
+        this.Proveedor = response.data;
+        this.Contactos= this.Proveedor.Contactos
+        var temp = this.Proveedor.CategoriaAsignadaProveedor;
+        if(temp.length>0){
+          let reformattedArray = temp.map(obj => {
+            var x = [obj.id].join(" ");
+            return x;
+          })
+          this.Proveedor.categoriasproveedor=reformattedArray
+        }
+        
+      });
     axios
     .get(this.$IPServidor + '/api/ListarCategoriasProveedores',{ headers: authHeader()})
     .then((response) => {
@@ -311,7 +346,7 @@ export default {
           axios({
             method:'POST',
             headers: authHeader(),
-            url:this.$IPServidor + '/api/CrearProveedor',
+            url:this.$IPServidor + '/api/EditarProveedor',
             data:{
               Proveedor:this.Proveedor,
               Contactos:this.Contactos
