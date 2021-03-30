@@ -14,6 +14,11 @@
           <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav >
 
+              <b-nav-item-dropdown text="Listados" v-if="showVentasMenu" >
+                  <b-dropdown-item href="/Clientes/ListarClientes">
+                      Clientes
+                  </b-dropdown-item>
+              </b-nav-item-dropdown>
               <b-nav-item-dropdown text="Ventas" v-if="showVentasMenu" >
                 <b-dropdown-item href="/ventas" >
                     Ventas Board
@@ -29,20 +34,20 @@
                   </b-dropdown-item>
                 </b-dropdown-group>
                 <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-group id="dropdown-group-2" header="Proveedores">
+                <b-dropdown-group id="dropdown-group-2" header="Personas">
                   <b-dropdown-item href="/Proveedores/ListarCategorias">
-                      Categorias Proveedor
+                      Categorias Proveedor/Clientes
                   </b-dropdown-item>
                   <b-dropdown-item href="/Proveedores/ListarProveedores">
                       Proveedores
                   </b-dropdown-item>
-                </b-dropdown-group>
-                <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-group id="dropdown-group-2" header="Vendedores">
                   <b-dropdown-item href="/Vendedores/ListarVendedores">
                       Vendedores
                   </b-dropdown-item>
-                </b-dropdown-group>
+                  <b-dropdown-item href="/Clientes/ListarClientes">
+                      Clientes
+                  </b-dropdown-item>
+                </b-dropdown-group>                
               </b-nav-item-dropdown>
               <b-nav-item-dropdown text="Administración"  v-if="showAdminMenu">
                 <b-dropdown-group id="dropdown-group-1" header="Funciones Principales">
@@ -144,7 +149,7 @@ export default {
     showVentasMenu() {
       
       if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_VENTAS')|| this.currentUser.roles.includes('ROLE_SUPERADMIN')|| this.currentUser.roles.includes('ROLE_ADMIN');
+        return this.currentUser.roles.includes('ROLE_VENTAS');
       }
 
       return false;

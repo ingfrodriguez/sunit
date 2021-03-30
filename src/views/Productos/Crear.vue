@@ -141,7 +141,9 @@ export default {
       .get(this.$IPServidor + '/api/ListarCategoriaProducto',{ headers: authHeader()})
       .then((response) => {
         this.CategoriasProductos = response.data;
-      });
+      });        
+    
+    
     UserService.getAdminBoard().then(
       (response) => {
         this.content = response.data;

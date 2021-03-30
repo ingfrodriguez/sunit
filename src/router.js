@@ -194,6 +194,34 @@ export const router = new Router({
       meta: {
         title: 'Listar Vendedores'
       }
+    },
+    //-------------------CLIENTES-------------------
+    {
+      path: '/Clientes/CrearCliente',
+      name: 'CrearCliente',
+      // lazy-loaded
+      component: () => import('./views/Clientes/CrearCliente.vue'),
+      meta: {
+        title: 'Crear Cliente'
+      }
+    },
+    {
+      path: '/Clientes/ModificarCliente',
+      name: 'ModificarCliente',
+      // lazy-loaded
+      component: () => import('./views/Clientes/ModificarCliente.vue'),
+      meta: {
+        title: 'Modificar Cliente'
+      }
+    },
+    {
+      path: '/Clientes/ListarClientes',
+      name: 'ListarClientes',
+      // lazy-loaded
+      component: () => import('./views/Clientes/ListarClientes.vue'),
+      meta: {
+        title: 'Listar Clientes'
+      }
     }
   ]
 });

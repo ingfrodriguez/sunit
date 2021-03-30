@@ -10,9 +10,7 @@
     </header>
 
   <div>
-    <label for="example-datepicker">Choose a date</label>
-    <b-form-datepicker id="example-datepicker" v-model="value" class="mb-2"></b-form-datepicker>
-    <p>Value: '{{ value }}'</p>
+    
   </div>
 
 
@@ -26,14 +24,7 @@ export default {
   name: 'Home',
   data() {
     return {
-      content: '',
-      value:'',
-      items: [
-          { age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-          { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-          { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-          { age: 38, first_name: 'Jami', last_name: 'Carney' }
-        ]
+      content: ''
     };
   },
   mounted() {

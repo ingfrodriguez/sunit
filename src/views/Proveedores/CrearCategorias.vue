@@ -5,7 +5,7 @@
     </header>
     <div class="col-md-12  mt-3 card card-container" v-if="BanderaSeguridad" >
         <header >
-          <h1  class="text-primary">Crear Categoria Proveedores</h1>
+          <h1  class="text-primary">Crear Categoria Proveedores/Clientes</h1>
         </header>
         <form name="form" @submit.prevent="handle">
           <div v-if="!successful">          

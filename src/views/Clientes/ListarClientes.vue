@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <header class="jumbotron" v-if="!BanderaSeguridad">
-      <h3>{{ content }}</h3>
-    </header>
-    <div class="col-md-12 mt-3 card card-container" v-if="BanderaSeguridad">
+    <div class="col-md-12 mt-3 card card-container">
       <b-row>
         <b-col cols="9">
           <header>
@@ -12,14 +9,14 @@
                 ><b-avatar variant="primary" icon="person"></b-avatar
               ></b-col>
               <b-col md="10"
-                ><h1 class="text-primary">Listado Vendedores</h1></b-col
+                ><h1 class="text-primary">Listado Clientes</h1></b-col
               >
             </b-row>
           </header>
         </b-col>
-        <b-col cols="3">
-          <b-button href="CrearVendedor" variant="light"
-            >Crear Vendedor<b-icon font-scale="1" icon="person-plus"></b-icon
+        <b-col cols="3" v-if="BanderaSeguridad">
+          <b-button href="CrearCliente" variant="light"
+            >Crear Cliente<b-icon font-scale="1" icon="person-plus"></b-icon
           ></b-button>
         </b-col>
       </b-row>
@@ -28,7 +25,7 @@
           <b-form-input
               v-model="filter"
               type="search"
-              placeholder="Filtrar "
+              placeholder="Filtrar Clientes"
           ></b-form-input>
         </b-col>
       </b-row>
@@ -45,12 +42,12 @@
       >
         <template #cell(Modificar)="data">
           <b-link
-            :to="{ name: 'ModificarVendedor', params: { id: data.item.id,ver:true } }"
+            :to="{ name: 'ModificarCliente', params: { id: data.item.id,ver:true } }"
             ><b-button variant="outline-secondary" size="sm"
               ><b-icon font-scale="1" icon="search"></b-icon></b-button
           ></b-link>
-          <b-link
-            :to="{ name: 'ModificarVendedor', params: { id: data.item.id } }"
+          <b-link v-if="BanderaSeguridad"
+            :to="{ name: 'ModificarCliente', params: { id: data.item.id } }"
             ><b-button variant="outline-secondary" size="sm"
               ><b-icon font-scale="1" icon="pencil-fill"></b-icon></b-button
           ></b-link>
@@ -84,9 +81,9 @@ export default {
       content: '',
       BanderaSeguridad: false,
       fields: [
+        { key: 'NIT', sortable: true },
         { key: 'Nombre', sortable: true },
-        { key: 'Telefono', sortable: false,label: 'Telefono' },
-        { key: 'Celular', sortable: false,label: 'Celular' },
+        { key: 'TelefonoPrincipal', sortable: false,label: 'Tel Principal' },
         { key: 'createdAt', sortable: true, label: 'Creado' },
         { key: 'Modificar', label: 'Modificar' }
       ],
@@ -100,7 +97,7 @@ export default {
   computed: {},
   mounted() {
     axios
-      .get(this.$IPServidor + '/api/ListarVendedores', {
+      .get(this.$IPServidor + '/api/ListarClientes', {
         headers: authHeader(),
       })
       .then((response) => {
@@ -108,18 +105,11 @@ export default {
         this.totalRows = this.items.length
       });
     UserService.getAdminBoard().then(
-      (response) => {
-        this.content = response.data;
+      () => {
         this.BanderaSeguridad = true;
       },
-      (error) => {
-        this.BanderaSeguridad = false;
-        this.content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
+      () => {
+        this.BanderaSeguridad = false;        
       }
     );
   },

@@ -1,9 +1,7 @@
 <template>
   <div  class="container">
-    <header class="jumbotron"  v-if="!BanderaSeguridad">
-      <h3>{{content}}</h3>
-    </header>
-    <div class="card mt-3 card-container" v-if="BanderaSeguridad" >
+    
+    <div class="card mt-3 card-container" >
         <header >
         <b-row class="mb-4" align-v="center">
           <b-col md="1" ><b-avatar variant="primary" icon="people-fill"></b-avatar></b-col>
@@ -15,10 +13,60 @@
             <div class="form-group">
               <b-container class="bv-example-row">
               <b-row>
+                <b-col  md="6">
+                  <b-input-group prepend="NIT" class="mb-2">
+                  <input
+                    v-model="Cliente.NIT"
+                    v-validate="'required|min:3|max:70'"
+                    class="form-control"
+                    name="NIT"
+                    placeholder="Ingreselo tal y como saldrá en la factura"
+                    disabled 
+                  />
+                  </b-input-group>
+                  <div
+                    v-if="submitted && errors.has('NIT')"
+                    class="alert-danger"
+                  >{{errors.first('NIT')}}</div>
+                </b-col>
+                <b-col md="6">
+                  <b-input-group prepend="Razón Social" class="mb-2">
+                  <input
+                    v-model="Cliente.RazonSocial"
+                    v-validate="'required|min:3|max:70'"
+                    class="form-control"
+                    name="RazonSocial"
+                    placeholder="Ingreselo tal y como saldrá en la factura"
+                    :disabled =BanderaVer
+                  />
+                  </b-input-group>
+                  <div
+                    v-if="submitted && errors.has('RazonSocial')"
+                    class="alert-danger"
+                  >{{errors.first('RazonSocial')}}</div>
+                </b-col>
+              </b-row>
+              <b-row class="mt-2">
+                <b-col md="6">
+                  <b-input-group prepend="Dirección Comercial" class="mb-2">
+                  <input
+                    v-model="Cliente.DireccionComercial"
+                    v-validate="'required|min:3|max:70'"
+                    type="text"
+                    class="form-control"
+                    name="DireccionComercial"
+                    :disabled =BanderaVer
+                  />
+                  </b-input-group>
+                  <div
+                    v-if="submitted && errors.has('DireccionComercial')"
+                    class="alert-danger"
+                  >{{errors.first('DireccionComercial')}}</div>
+                </b-col>
                 <b-col md="6">
                   <b-input-group prepend="Nombre" class="mb-2">
                   <input
-                    v-model="Vendedor.Nombre"
+                    v-model="Cliente.Nombre"
                     v-validate="'required|min:3|max:70'"
                     type="text"
                     class="form-control"
@@ -31,65 +79,40 @@
                     class="alert-danger"
                   >{{errors.first('Nombre')}}</div>
                 </b-col>
+              </b-row>
+              <b-row class="mt-2">
                 <b-col md="6">
-                 <b-input-group prepend="Teléfono" class="mb-2">
+                  <b-input-group prepend="Comentarios" class="mb-2">
+                  <b-form-textarea
+                    v-model="Cliente.Comentarios"
+                      rows="2"
+                      max-rows="6"
+                      :disabled =BanderaVer
+                  ></b-form-textarea>
+                  </b-input-group>
+                </b-col>
+                <b-col md="6">
+                 <b-input-group prepend="Teléfono Principal" class="mb-2">
                   <input
-                    v-model="Vendedor.Telefono"
+                    v-model="Cliente.TelefonoPrincipal"
                     v-validate="'required|numeric'"
                     type="tel"
                     class="form-control"
-                    name="Telefono"
+                    name="TelefonoPrincipal"
                     :disabled =BanderaVer
                   />
                  </b-input-group>
                   <div
-                    v-if="submitted && errors.has('Telefono')"
+                    v-if="submitted && errors.has('TelefonoPrincipal')"
                     class="alert-danger"
-                  >{{errors.first('Telefono')}}</div>
+                  >{{errors.first('TelefonoPrincipal')}}</div>
                 </b-col>
-                <b-col md="6">
-                 <b-input-group prepend="Celular" class="mb-2">
-                  <input
-                    v-model="Vendedor.Celular"
-                    type="number"
-                    class="form-control"
-                    name="Celular"
-                    :disabled =BanderaVer
-                  />
-                 </b-input-group>
-                </b-col>
-                <b-col md="6">
-                 <b-input-group prepend="Domicilio" class="mb-2">
-                  <input
-                    v-model="Vendedor.Domicilio"
-                    v-validate="'required'"
-                    type="tel"
-                    class="form-control"
-                    name="Domicilio"
-                    :disabled =BanderaVer
-                  />
-                 </b-input-group>
-                  <div
-                    v-if="submitted && errors.has('Domicilio')"
-                    class="alert-danger"
-                  >{{errors.first('Domicilio')}}</div>
-                </b-col>
-                <b-col md="6">
-                  <b-input-group prepend="Correo Electrónico" class="mb-2">
-                  <input
-                    v-model="Vendedor.Email"
-                    type="Email"
-                    class="form-control"
-                    name="Email"
-                    :disabled =BanderaVer
-                  />
-                  </b-input-group>
-                </b-col>
-              
+              </b-row>
+              <b-row class="mt-2">
                 <b-col md="6">
                   <b-input-group prepend="Horario Laboral" class="mb-2">
                   <b-form-input
-                    v-model="Vendedor.HorarioLaboral"
+                    v-model="Cliente.HorarioLaboral"
                     type="text"
                     class="form-control"
                     name="HorarioLaboral"
@@ -97,40 +120,81 @@
                   ></b-form-input>
                   </b-input-group>
                 </b-col>
-                
                 <b-col md="6">
-                 <b-input-group prepend="Comisión Asignada" class="mb-2">
+                  <b-input-group prepend="Dirección de Entrega" class="mb-2">
                   <input
-                    v-model="Vendedor.ComisionAsignada"
-                    v-validate="'required|decimal:2'"
-                    type="number"
+                    v-model="Cliente.DireccionEntrega"
                     class="form-control"
-                    name="ComisionAsignada"
+                    name="DireccionEntrega"
                     :disabled =BanderaVer
                   />
-                 </b-input-group>
-                  <div
-                    v-if="submitted && errors.has('ComisionAsignada')"
-                    class="alert-danger"
-                  >{{errors.first('ComisionAsignada')}}</div>
-                </b-col>
-                
-                <b-col md="6">
-                  <b-input-group prepend="Comentarios" class="mb-2">
-                  <b-form-textarea
-                    v-model="Vendedor.Comentarios"
-                      rows="2"
-                      max-rows="6"
-                      :disabled =BanderaVer
-                  ></b-form-textarea>
                   </b-input-group>
                 </b-col>
-                
+              </b-row>
+              <b-row class="mt-2">
+                <b-col md="6">
+                  <b-input-group prepend="Correo Electrónico" class="mb-2">
+                  <input
+                    v-model="Cliente.Email"
+                    type="Email"
+                    class="form-control"
+                    name="Email"
+                    :disabled =BanderaVer
+                  />
+                  </b-input-group>
+                </b-col>
+                <b-col md="6">
+                  <b-input-group prepend="Días de Crédito" class="mb-2">
+                  <input
+                    v-model="Cliente.Credito"
+                    type="number"
+                    class="form-control"
+                    name="Email"
+                    :disabled =BanderaVer
+                  />
+                  </b-input-group>
+                </b-col>
+              </b-row>
+              <b-row class="mt-2">
+                <b-col md="6">
+                  
+
+                  <b-input-group prepend="Valoración" class="mb-2">
+                  <b-form-rating :disabled =BanderaVer v-model="Cliente.Valoracion" color="#ff8800"></b-form-rating>
+                  </b-input-group>
+                </b-col>
+                <b-col  md="6">
+                  <div class="form-group">
+                    <b-input-group prepend="Vendedor Asignado" class="mb-2">
+                    <b-form-select
+                      v-model="Cliente.VendedorId"
+                      :options="Vendedores"
+                      value-field="id"
+                      text-field="Nombre"
+                      :disabled =BanderaVer
+                    ></b-form-select>
+                    </b-input-group>
+                  </div>
+                </b-col>
                 
               </b-row>
               <b-row class="mt-4">
                 <b-col>
-                  <h2>Contactos</h2><b-icon  v-if="!BanderaVer" font-scale="1" icon="person-plus" class="mr-2"></b-icon>
+                  <label>Seleccione Categorias</label>
+                  <b-form-checkbox-group
+                  v-model="Cliente.categoriascliente"
+                  :options="Categorias"
+                  class="mb-3"
+                  value-field="id"
+                  text-field="Nombre"
+                  switches
+                  :disabled =BanderaVer
+                ></b-form-checkbox-group>
+                </b-col>
+              </b-row>
+              <b-row class="mt-4">
+                <b-col>
+                  <h2>Contactos</h2><b-icon v-if="!BanderaVer" font-scale="1" icon="person-plus" class="mr-2"></b-icon>
                   <b-link v-if="!BanderaVer" class="colorx" v-on:click="agregar">Agregar Contacto</b-link >
                 </b-col>
               </b-row>
@@ -195,7 +259,7 @@
 
               <b-row>
                 <b-col>
-                  <button class="btn btn-primary mt-4" v-if="!BanderaVer">Modificar</button>
+                  <button v-if="!BanderaVer" class="btn btn-primary mt-4">Modificar</button>
                 </b-col>
               </b-row>
               </b-container>
@@ -226,18 +290,22 @@ export default {
       submitted: false,
       successful: false,
       mensaje:'',
-      titulo:'Modificar Vendedor',
       Categorias: [],
-      Vendedor: {
-        id:null,
-        Nombre: null,
-        Telefono: null,
-        Celular: null,
-        Domicilio: null,
-        Email: null,
+      Vendedores: [],
+      titulo:'Modificar Cliente',
+      Cliente: {
+        NIT: '',
+        RazonSocial:'',
+        DireccionComercial:'',
+        Nombre: '',
+        Email: '',
+        Credito:null,
+        Valoracion:null,
+        DireccionEntrega:null,
         Comentarios:'',
+        TelefonoPrincipal:0,
         HorarioLaboral:'Lunes a Viernes de 8:00 A.m. a 5:00 p.m.',
-        ComisionAsignada:null
+        categoriascliente:[]
       },
       Contactos:[
       
@@ -247,21 +315,38 @@ export default {
   computed: {
   },
   mounted() {     
-    this.BanderaVer= this.$route.params.ver
-    if (this.BanderaVer) this.titulo ='Ver Vendedor' 
     axios
-      .get(this.$IPServidor + '/api/VerVendedor', {
+      .get(this.$IPServidor + '/api/ListarVendedores',{ headers: authHeader()})
+      .then((response) => {
+        this.Vendedores = response.data;
+      });
+    this.BanderaVer= this.$route.params.ver
+    if (this.BanderaVer) this.titulo ='Ver Cliente' 
+    axios
+      .get(this.$IPServidor + '/api/vercliente', {
         params: {
           id: this.$route.params.id,
         },
         headers: authHeader(),
       })
       .then((response) => {
-        this.Vendedor = response.data;
-        this.Contactos= this.Vendedor.Contactos
-      })
-
-
+        this.Cliente = response.data;
+        this.Contactos= this.Cliente.Contactos
+        var temp = this.Cliente.CategoriaAsignadaCliente;
+        if(temp.length>0){
+          let reformattedArray = temp.map(obj => {
+            var x = [obj.id].join(" ");
+            return x;
+          })
+          this.Cliente.categoriascliente=reformattedArray
+        }
+        
+      });
+    axios
+    .get(this.$IPServidor + '/api/ListarCategoriasProveedores',{ headers: authHeader()})
+    .then((response) => {
+      this.Categorias = response.data;
+    }); 
     UserService.getAdminBoard().then(
       response => {
         this.content = response.data;
@@ -303,16 +388,16 @@ export default {
           axios({
             method:'POST',
             headers: authHeader(),
-            url:this.$IPServidor + '/api/ModificarVendedor',
+            url:this.$IPServidor + '/api/ModificarCliente',
             data:{
-              Vendedor:this.Vendedor,
+              Cliente:this.Cliente,
               Contactos:this.Contactos
             }
           })
           .then(response => {
             this.mensaje=response.data.message;
             this.successful = true;
-            this.$router.push('/Vendedores/ListarVendedores');
+            this.$router.push('/Clientes/ListarClientes');
           })
           .catch( error => {
               this.mensaje=error.response.data.message;

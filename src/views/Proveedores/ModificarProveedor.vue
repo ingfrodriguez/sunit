@@ -256,7 +256,7 @@ export default {
       submitted: false,
       successful: false,
       mensaje:'',
-      titulo:'Modificar Proveedores',
+      titulo:'Modificar Proveedor',
       Categorias: [],
       Proveedor: {
         NIT: '',

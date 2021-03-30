@@ -9,7 +9,7 @@
             <header>
               <b-row class="mb-4" align-v="center">
                       <b-col md="2" ><b-avatar variant="primary" icon="folder"></b-avatar></b-col>
-                      <b-col md="10"><h1  class="text-primary ">Listado Categorias Proveedores</h1></b-col>
+                      <b-col md="10"><h1  class="text-primary ">Listado Categorias Proveedores/Clientes</h1></b-col>
               </b-row>
             </header>
           </b-col>
