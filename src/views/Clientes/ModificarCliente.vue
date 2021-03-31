@@ -143,7 +143,7 @@
                   />
                   </b-input-group>
                 </b-col>
-                <b-col md="6">
+                <b-col md="6"  v-if="BanderaSeguridad">
                   <b-input-group prepend="Días de Crédito" class="mb-2">
                   <input
                     v-model="Cliente.Credito"
@@ -156,7 +156,7 @@
                 </b-col>
               </b-row>
               <b-row class="mt-2">
-                <b-col md="6">
+                <b-col md="6"   v-if="BanderaSeguridad">
                   
 
                   <b-input-group prepend="Valoración" class="mb-2">

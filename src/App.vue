@@ -49,8 +49,11 @@
                   </b-dropdown-item>
                 </b-dropdown-group>                
               </b-nav-item-dropdown>
-              <b-nav-item-dropdown text="Administración"  v-if="showAdminMenu">
+              <b-nav-item-dropdown text="Funciones"  v-if="showAdminMenu">
                 <b-dropdown-group id="dropdown-group-1" header="Funciones Principales">
+                  <b-dropdown-item href="/Inventario/Ingreso" >
+                      Ingreso de Producto a Inventario
+                  </b-dropdown-item>
                   <b-dropdown-item href="/admin" >
                       Admin Board
                   </b-dropdown-item>
