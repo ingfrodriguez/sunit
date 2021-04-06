@@ -73,7 +73,7 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col md="6">
+                <b-col md="12">
                   <h3>Detalle del Ingreso</h3>
                   <b-table
                     responsive
@@ -87,6 +87,9 @@
                   </template>
                   <template #cell(CostoUnitario)="data">
                      <b-form-input v-model="data.item.CostoUnitario" ></b-form-input>
+                  </template>
+                  <template #cell(CostoTotal)="row">
+                     <b-form-input v-model="row.item.CostoTotal" ></b-form-input>
                   </template>
                   </b-table>
                 </b-col>
@@ -136,9 +139,10 @@ export default {
       },
       fields: [
         { key: 'Cantidad' },
-        { key: 'CostoUnitario' }
+        { key: 'CostoUnitario' },
+        { key: 'CostoTotal' }
       ],
-      IngresoDetalle: [{ Cantidad: 1, CostoUnitario: 10.5 }],
+      IngresoDetalle: [{ Cantidad: 1, CostoUnitario: 10.5,CostoTotal:110 }],
     };
   },
   computed: {

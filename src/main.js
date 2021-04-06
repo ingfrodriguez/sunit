@@ -37,9 +37,9 @@ Validator.localize("es", es);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 //Vue.prototype.$IPServidor = 'http://10.161.151.8:8080'
-//Vue.prototype.$IPServidor = 'http://192.168.232.98:8080'
+Vue.prototype.$IPServidor = 'http://192.168.232.98:8080'
 //Vue.prototype.$IPServidor = 'http://10.168.0.120:8080'
-Vue.prototype.$IPServidor = 'http://10.161.187.35:8080'
+//Vue.prototype.$IPServidor = 'http://10.161.187.35:8080'
 
 Vue.use(Vuex);
 
