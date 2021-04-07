@@ -10,7 +10,8 @@
             ><b-avatar variant="primary" icon="people-fill"></b-avatar
           ></b-col>
           <b-col md="11"
-            ><h1 class="text-primary">Ingreso a Inventario</h1></b-col
+            ><h1 class="text-primary">Ingreso a Inventario</h1>
+            </b-col
           >
         </b-row>
       </header>
@@ -83,21 +84,31 @@
                     :fields="fields"
                   >
                   <template #cell(Linea)="data">
-                     <b-form-input v-model="data.item.Linea"></b-form-input>
+                     <b-form-input v-model="data.item.Linea" disabled class="Linea"></b-form-input>
+                  </template>
+                  <template #cell(ProductoId)="data">
+                     <b-form-input v-model="data.item.ProductoId" ></b-form-input>
                   </template>
                   <template #cell(Cantidad)="data">
-                     <b-form-input v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
+                     <b-form-input v-on:keyup.115="Agregar()" v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
                   </template>
                   <template #cell(CostoUnitario)="data">
-                     <b-form-input v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
+                     <b-form-input  v-on:keyup.115="Agregar()" v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
                   </template>
                   <template #cell(CostoTotal)="data">
-                     <b-form-input v-model="data.item.CostoTotal" ></b-form-input>
+                     <b-form-input v-model="data.item.CostoTotal" disabled></b-form-input>
                   </template>
                   <template #cell(Eliminar)="data">
                      <b-icon font-scale="0" icon="trash" v-on:click="Eliminar(data.item.Linea)"></b-icon>  
                   </template>
                   </b-table>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col md="11">
+                </b-col>
+                <b-col v-b-tooltip.hover title="Puede Presionar F4 cuando este ingresando para agregar más Líneas" md="1">
+                  <b-icon  font-scale="0" icon="plus" class="h2"  v-on:click="Agregar()" ></b-icon>  
                 </b-col>
               </b-row>
               <b-row>
@@ -145,15 +156,16 @@ export default {
       },
       fields: [
         { key: 'Linea' },
+        { key: 'ProductoId',label:'Producto' },
         { key: 'Cantidad' },
         { key: 'CostoUnitario' },
         { key: 'CostoTotal' },
         { key: 'Eliminar' }
       ],
       IngresoDetalle: [
-        { Linea:1,Cantidad: 1, CostoUnitario: 10.5,CostoTotal:110 },
-        { Linea:2,Cantidad: 1, CostoUnitario: 6.25,CostoTotal:610 },
-        { Linea:3,Cantidad: 25, CostoUnitario: 8,CostoTotal:810 }
+        { Linea:1,ProductoId:1,Cantidad: 1, CostoUnitario: 10.5,CostoTotal:110 },
+        { Linea:2,ProductoId:1,Cantidad: 1, CostoUnitario: 6.25,CostoTotal:610 },
+        { Linea:3,ProductoId:2,Cantidad: 25, CostoUnitario: 8,CostoTotal:810 }
       ],
     };
   },
@@ -204,6 +216,14 @@ export default {
       var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
       this.IngresoDetalle[Index].CostoTotal=Cantidad*CostoUnitario
     },
+    Agregar(){
+      this.IngresoDetalle.push(
+        { Linea:1,Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
+      )
+      for (var i = 0; i < this.IngresoDetalle.length; i++) {
+        this.IngresoDetalle[i].Linea=i+1
+      }
+    },
     Eliminar(numerobuscar){
       var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
       this.IngresoDetalle.splice(Index, 1);
@@ -236,3 +256,13 @@ export default {
   },
 };
 </script>
+
+
+<style scoped>
+.Linea {  
+  width:50px;
+}
+.Cantidad {  
+  width:75px;
+}
+</style>
