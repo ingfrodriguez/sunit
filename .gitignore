@@ -2,6 +2,7 @@
 node_modules
 /dist
 
+
 # local env files
 .env.local
 .env.*.local
@@ -19,3 +20,6 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+src/main.js
+src/services/auth.service.js
+src/services/user.service.js

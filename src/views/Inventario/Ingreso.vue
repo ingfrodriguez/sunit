@@ -82,14 +82,20 @@
                     :items="IngresoDetalle"
                     :fields="fields"
                   >
+                  <template #cell(Linea)="data">
+                     <b-form-input v-model="data.item.Linea"></b-form-input>
+                  </template>
                   <template #cell(Cantidad)="data">
-                     <b-form-input v-model="data.item.Cantidad" ></b-form-input>
+                     <b-form-input v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
                   </template>
                   <template #cell(CostoUnitario)="data">
-                     <b-form-input v-model="data.item.CostoUnitario" ></b-form-input>
+                     <b-form-input v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
                   </template>
-                  <template #cell(CostoTotal)="row">
-                     <b-form-input v-model="row.item.CostoTotal" ></b-form-input>
+                  <template #cell(CostoTotal)="data">
+                     <b-form-input v-model="data.item.CostoTotal" ></b-form-input>
+                  </template>
+                  <template #cell(Eliminar)="data">
+                     <b-icon font-scale="0" icon="trash" v-on:click="Eliminar(data.item.Linea)"></b-icon>  
                   </template>
                   </b-table>
                 </b-col>
@@ -138,11 +144,17 @@ export default {
         ProveedorId: 1,
       },
       fields: [
+        { key: 'Linea' },
         { key: 'Cantidad' },
         { key: 'CostoUnitario' },
-        { key: 'CostoTotal' }
+        { key: 'CostoTotal' },
+        { key: 'Eliminar' }
       ],
-      IngresoDetalle: [{ Cantidad: 1, CostoUnitario: 10.5,CostoTotal:110 }],
+      IngresoDetalle: [
+        { Linea:1,Cantidad: 1, CostoUnitario: 10.5,CostoTotal:110 },
+        { Linea:2,Cantidad: 1, CostoUnitario: 6.25,CostoTotal:610 },
+        { Linea:3,Cantidad: 25, CostoUnitario: 8,CostoTotal:810 }
+      ],
     };
   },
   computed: {
@@ -188,6 +200,18 @@ export default {
     );
   },
   methods: {
+    sumar(numerobuscar,Cantidad,CostoUnitario){
+      var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+      this.IngresoDetalle[Index].CostoTotal=Cantidad*CostoUnitario
+    },
+    Eliminar(numerobuscar){
+      var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+      this.IngresoDetalle.splice(Index, 1);
+      //for (const value of this.IngresoDetalle) {
+      for (var i = 0; i < this.IngresoDetalle.length; i++) {
+        this.IngresoDetalle[i].Linea=i+1
+      }
+    },
     handle() {
       this.message = '';
       this.submitted = true;
