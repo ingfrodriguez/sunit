@@ -86,8 +86,8 @@
                   <template #cell(Linea)="data">
                      <b-form-input v-model="data.item.Linea" disabled class="Linea"></b-form-input>
                   </template>
-                  <template #cell(ProductoId)="data">
-                     <b-form-input v-model="data.item.ProductoId" ></b-form-input>
+                  <template #cell(Codigo)="data">
+                     <b-form-input v-model="data.item.Codigo" @change="NombreProducto(data.item.Linea,data.item.Codigo)"></b-form-input>
                   </template>
                   <template #cell(Cantidad)="data">
                      <b-form-input v-on:keyup.115="Agregar()" v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
@@ -112,7 +112,7 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col>
+                <b-col>{{IngresoDetalle}}
                   <button class="btn btn-primary mt-4">
                     Ingresar Producto
                   </button>
@@ -156,16 +156,14 @@ export default {
       },
       fields: [
         { key: 'Linea' },
-        { key: 'ProductoId',label:'Producto' },
+        { key: 'Codigo',label:'Producto' },
+        { key: 'ProductoNombre',label:'Nombre Producto' },
         { key: 'Cantidad' },
         { key: 'CostoUnitario' },
         { key: 'CostoTotal' },
         { key: 'Eliminar' }
       ],
       IngresoDetalle: [
-        { Linea:1,ProductoId:1,Cantidad: 1, CostoUnitario: 10.5,CostoTotal:110 },
-        { Linea:2,ProductoId:1,Cantidad: 1, CostoUnitario: 6.25,CostoTotal:610 },
-        { Linea:3,ProductoId:2,Cantidad: 25, CostoUnitario: 8,CostoTotal:810 }
       ],
     };
   },
@@ -218,7 +216,7 @@ export default {
     },
     Agregar(){
       this.IngresoDetalle.push(
-        { Linea:1,Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
+        { Linea:0,ProductoId:null,Codigo:null,ProductoNombre:'',Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
       )
       for (var i = 0; i < this.IngresoDetalle.length; i++) {
         this.IngresoDetalle[i].Linea=i+1
@@ -231,6 +229,27 @@ export default {
       for (var i = 0; i < this.IngresoDetalle.length; i++) {
         this.IngresoDetalle[i].Linea=i+1
       }
+    },
+    NombreProducto(numerobuscar,Codigo){
+      axios({
+            method:'GET',
+            headers: authHeader(),
+            url:this.$IPServidor + '/api/VerProductoCorto',
+            params:{
+              Codigo:Codigo
+            }
+          })
+      .then((response) => {
+        var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+        this.IngresoDetalle[Index].ProductoNombre=response.data.Nombre
+        this.IngresoDetalle[Index].ProductoId=response.data.id
+
+      })
+      .catch(() => {
+        var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+        this.IngresoDetalle[Index].ProductoNombre='Código Incorrecto'
+        this.IngresoDetalle[Index].ProductoId=null
+      });
     },
     handle() {
       this.message = '';
