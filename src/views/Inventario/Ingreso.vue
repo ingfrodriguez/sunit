@@ -75,7 +75,7 @@
               </b-row>
               <b-row>
                 <b-col md="12">
-                  <h3>Detalle del Ingreso</h3>
+                  <h3 class="mb-3 mt-5">Detalle del Ingreso</h3>
                   <b-table
                     responsive
                     striped
@@ -87,16 +87,16 @@
                      <b-form-input v-model="data.item.Linea" disabled class="Linea"></b-form-input>
                   </template>
                   <template #cell(Codigo)="data">
-                     <b-form-input v-model="data.item.Codigo" @change="NombreProducto(data.item.Linea,data.item.Codigo)"></b-form-input>
+                     <b-form-input v-model="data.item.Codigo" @change="NombreProducto(data.item.Linea,data.item.Codigo)" class="Codigo"></b-form-input>
                   </template>
                   <template #cell(Cantidad)="data">
-                     <b-form-input v-on:keyup.115="Agregar()" v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
+                     <b-form-input v-on:keyup.115="Agregar()" v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)" class="Cantidad" type="number"></b-form-input>
                   </template>
                   <template #cell(CostoUnitario)="data">
-                     <b-form-input  v-on:keyup.115="Agregar()" v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)"></b-form-input>
+                     <b-form-input  v-on:keyup.115="Agregar()" v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)" class="CostoUnitario"></b-form-input>
                   </template>
                   <template #cell(CostoTotal)="data">
-                     <b-form-input v-model="data.item.CostoTotal" disabled></b-form-input>
+                     <b-form-input v-model="data.item.CostoTotal" disabled class="CostoTotal"></b-form-input>
                   </template>
                   <template #cell(Eliminar)="data">
                      <b-icon font-scale="0" icon="trash" v-on:click="Eliminar(data.item.Linea)"></b-icon>  
@@ -156,8 +156,8 @@ export default {
       },
       fields: [
         { key: 'Linea' },
-        { key: 'Codigo',label:'Producto' },
-        { key: 'ProductoNombre',label:'Nombre Producto' },
+        { key: 'Codigo',label:'Codigo' },
+        { key: 'ProductoNombre',label:'Nombre' },
         { key: 'Cantidad' },
         { key: 'CostoUnitario' },
         { key: 'CostoTotal' },
@@ -212,11 +212,22 @@ export default {
   methods: {
     sumar(numerobuscar,Cantidad,CostoUnitario){
       var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
-      this.IngresoDetalle[Index].CostoTotal=Cantidad*CostoUnitario
+      let total=this.round(Cantidad*CostoUnitario,2)
+      if(Number.isNaN(total)){        
+        this.IngresoDetalle[Index].BanderaTotal=false
+      } else{
+        this.IngresoDetalle[Index].BanderaTotal=true
+      }
+      if(Number.isNaN(total) || !this.IngresoDetalle[Index].BanderaProducto){        
+        this.IngresoDetalle[Index]._rowVariant='danger'
+      } else{
+        this.IngresoDetalle[Index]._rowVariant=null
+      }
+      this.IngresoDetalle[Index].CostoTotal=total
     },
     Agregar(){
       this.IngresoDetalle.push(
-        { Linea:0,ProductoId:null,Codigo:null,ProductoNombre:'',Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
+        { BanderaTotal:true,BanderaProducto:true,_rowVariant: null,Linea:0,ProductoId:null,Codigo:null,ProductoNombre:'',Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
       )
       for (var i = 0; i < this.IngresoDetalle.length; i++) {
         this.IngresoDetalle[i].Linea=i+1
@@ -243,12 +254,24 @@ export default {
         var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
         this.IngresoDetalle[Index].ProductoNombre=response.data.Nombre
         this.IngresoDetalle[Index].ProductoId=response.data.id
-
+        this.IngresoDetalle[Index].BanderaProducto=true
+        if(this.IngresoDetalle[Index].BanderaTotal && this.IngresoDetalle[Index].BanderaProducto){
+          this.IngresoDetalle[Index]._rowVariant=null
+        } else{
+          this.IngresoDetalle[Index]._rowVariant='danger'
+        }
+        
       })
       .catch(() => {
         var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
         this.IngresoDetalle[Index].ProductoNombre='Código Incorrecto'
         this.IngresoDetalle[Index].ProductoId=null
+        this.IngresoDetalle[Index].BanderaProducto=false
+        if(this.IngresoDetalle[Index].BanderaTotal && this.IngresoDetalle[Index].BanderaProducto){
+          this.IngresoDetalle[Index]._rowVariant=null
+        } else{
+          this.IngresoDetalle[Index]._rowVariant='danger'
+        }
       });
     },
     handle() {
@@ -282,6 +305,15 @@ export default {
   width:50px;
 }
 .Cantidad {  
-  width:75px;
+  width:100px;
+}
+.Codigo {  
+  width:100px;
+}
+.CostoUnitario  {  
+  width:125px;
+}
+.CostoTotal  {  
+  width:150px;
 }
 </style>
