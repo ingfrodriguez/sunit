@@ -112,7 +112,7 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col>{{IngresoDetalle}}
+                <b-col>
                   <button class="btn btn-primary mt-4">
                     Ingresar Producto
                   </button>
