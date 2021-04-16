@@ -232,6 +232,24 @@ export const router = new Router({
       meta: {
         title: 'Ingreso Inventario'
       }
+    },
+    {
+      path: '/Inventario/ListarIngresos',
+      name: 'ListarIngresos',
+      // lazy-loaded
+      component: () => import('./views/Inventario/ListarIngresos.vue'),
+      meta: {
+        title: 'Listado de Ingresos'
+      }
+    },
+    {
+      path: '/Inventario/VerIngreso',
+      name: 'VerIngreso',
+      // lazy-loaded
+      component: () => import('./views/Inventario/VerIngreso.vue'),
+      meta: {
+        title: 'Ver Ingreso'
+      }
     }
   ]
 });

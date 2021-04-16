@@ -9,13 +9,9 @@
           <b-col md="1"
             ><b-avatar variant="primary" icon="people-fill"></b-avatar
           ></b-col>
-          <b-col md="10"
-            ><h1 class="text-primary">{{titulo}}</h1>
-            </b-col>
-          <b-col md="1">
-            <b-icon font-scale="2" icon="printer" v-on:click="Eliminar()" v-if="BanderaVer" class="mr-2"></b-icon>  
-            <b-icon font-scale="2" icon="question-circle"  v-if="!BanderaVer" v-b-popover.hover.v-warning="'1.Cuando este ingresando el detalle presione INSERT para agregar otro producto.    \n   2.Puede usar TAB para navegar sin el mouse  3.Puede presionar la lupita para buscar productos'"></b-icon>  
-          </b-col
+          <b-col md="11"
+            ><h1 class="text-primary">Ver Ingreso</h1>
+            </b-col
           >
         </b-row>
       </header>
@@ -32,7 +28,6 @@
                         :options="TiposIngreso"
                         value-field="id"
                         text-field="Nombre"
-                        :disabled =BanderaVer
                         @change="cambioingreso()"
                       ></b-form-select>
                     </b-input-group>
@@ -45,7 +40,6 @@
                       v-validate="'required|min:3|max:70'"
                       class="form-control"
                       name="SerieNumero"
-                      :disabled =BanderaVer
                       placeholder="Serie"
                     />
                     <input
@@ -53,7 +47,6 @@
                       v-validate="'required|min:3|max:70'"
                       class="form-control"
                       name="FacturaNumero"
-                      :disabled =BanderaVer
                       placeholder="Número"
                     />
                   </b-input-group>
@@ -77,7 +70,6 @@
                       :options="Proveedores"
                       value-field="id"
                       text-field="Nombre"
-                      :disabled =BanderaVer
                     ></b-form-select>
                   </b-input-group>
                 </b-col>
@@ -87,7 +79,6 @@
                       v-model="Ingreso.Notas"
                       class="form-control"                      
                       placeholder="Notas"
-                      :disabled =BanderaVer
                     />
                   </b-input-group>
                 </b-col>
@@ -107,23 +98,23 @@
                   </template>
                   <template #cell(Codigo)="data">
                     <b-input-group class="Codigo">
-                      <b-form-input  v-on:keyup.45="Agregar()"  v-model="data.item.Codigo" @change="NombreProducto(data.item.Linea,data.item.Codigo)" :disabled =BanderaVer></b-form-input>
+                      <b-form-input  v-on:keyup.45="Agregar()" v-model="data.item.Codigo" @change="NombreProducto(data.item.Linea,data.item.Codigo)" ></b-form-input>
                       <b-input-group-append>
-                        <b-button @click="abrircomponente(data.item.Linea)" variant="info" v-if="!BanderaVer"><b-icon class="mb-1" font-scale="0.90" icon="search"></b-icon>  </b-button>                      
+                        <b-button @click="abrircomponente(data.item.Linea)" variant="info"><b-icon class="mb-1" font-scale="0.90" icon="search"></b-icon>  </b-button>                      
                       </b-input-group-append>
                     </b-input-group>
                   </template>
                   <template #cell(Cantidad)="data">
-                     <b-form-input v-on:keyup.45="Agregar(data.item.Linea)" v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)" class="Cantidad" type="number" :disabled =BanderaVer></b-form-input>
+                     <b-form-input v-on:keyup.45="Agregar(data.item.Linea)" v-model="data.item.Cantidad" @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)" class="Cantidad" type="number"></b-form-input>
                   </template>
                   <template #cell(CostoUnitario)="data">
-                     <b-form-input  v-on:keyup.45="Agregar()" v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)" class="CostoUnitario" :disabled =BanderaVer></b-form-input>
+                     <b-form-input  v-on:keyup.45="Agregar()" v-model="data.item.CostoUnitario"  @change="sumar(data.item.Linea,data.item.Cantidad,data.item.CostoUnitario)" class="CostoUnitario"></b-form-input>
                   </template>
                   <template #cell(CostoTotal)="data">
-                     <b-form-input v-model="data.item.CostoTotal" disabled class="CostoTotal" ></b-form-input>
+                     <b-form-input v-model="data.item.CostoTotal" disabled class="CostoTotal"></b-form-input>
                   </template>
                   <template #cell(Eliminar)="data">
-                     <b-icon font-scale="0" icon="trash" v-on:click="Eliminar(data.item.Linea)" v-if="!BanderaVer"></b-icon>  
+                     <b-icon font-scale="0" icon="trash" v-on:click="Eliminar(data.item.Linea)"></b-icon>  
                   </template>
                   </b-table>
                 </b-col>
@@ -131,13 +122,13 @@
               <b-row>
                 <b-col md="11">
                 </b-col>
-                <b-col md="1" v-if="!BanderaVer">
+                <b-col v-b-tooltip.hover title="Puede Presionar F4 cuando este ingresando para agregar más Líneas" md="1">
                   <b-icon  font-scale="0" icon="plus" class="h2"  v-on:click="Agregar()" ></b-icon>  
                 </b-col>
               </b-row>
               <b-row>
                 <b-col>
-                  <button class="btn btn-primary mt-4" v-if="!BanderaVer">
+                  <button class="btn btn-primary mt-4">
                     Ingresar Producto
                   </button>
                 </b-col>
@@ -166,7 +157,6 @@ import axios from 'axios';
 import UserService from '../../services/user.service';
 import authHeader from '../../services/auth-header';
 import Componentelistadoproductos from '@/components/Componentelistadoproductos'
-
 export default {
   components:{
      Componentelistadoproductos
@@ -174,8 +164,6 @@ export default {
   data() {
     return {
       content: '',
-      titulo:'Ingreso a Inventario',
-      BanderaVer:false,
       idContacto: 0,
       LineaSeleccionada:null,
       mensaje: '',
@@ -216,31 +204,22 @@ export default {
     },
   },
   mounted() {
-    this.BanderaVer= this.$route.params.ver
-    if (this.BanderaVer){
-      this.titulo='Ver Ingreso a Inventario'  
-      axios
-        .get(this.$IPServidor + '/api/VerIngreso', {
-          params: {
-            id: this.$route.params.id,
-          },
-          headers: authHeader(),
-        })
-        .then((response) => {
-          for (var i = 0; i < response.data.IngresosDetalles.length; i++) {
-            response.data.IngresosDetalles[i].Linea=i+1
-            response.data.IngresosDetalles[i].Codigo=response.data.IngresosDetalles[i].Producto.Codigo
-            response.data.IngresosDetalles[i].ProductoNombre=response.data.IngresosDetalles[i].Producto.Nombre
-            response.data.IngresosDetalles[i].UnidadMedida=response.data.IngresosDetalles[i].Producto.UnidadesMedida.Nombre
-          }
+    
+    axios
+      .get(this.$IPServidor + '/api/VerIngreso', {
+        params: {
+          id: this.$route.params.id,
+        },
+        headers: authHeader(),
+      })
+      .then((response) => {
+        //console.log(response.data)
+        this.Ingreso = response.data;
+        this.IngresoDetalle = response.data.IngresosDetalles;
+      });
 
-          this.Ingreso = response.data;
-          this.IngresoDetalle = response.data.IngresosDetalles;
-        });
 
-    } else {
-      this.titulo='Ingreso a Inventario'
-    }
+
     axios
       .get(this.$IPServidor + '/api/ListarProveedoresSinInclude', {
         headers: authHeader(),

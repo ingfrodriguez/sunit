@@ -59,6 +59,13 @@
                   </b-dropdown-item>
                 </b-dropdown-group>
               </b-nav-item-dropdown>
+              <b-nav-item-dropdown text="Consultas"  v-if="showAdminMenu">
+                <b-dropdown-group id="dropdown-group-1" header="Inventario">
+                  <b-dropdown-item href="/Inventario/ListarIngresos" >
+                      Consulta de Ingresos
+                  </b-dropdown-item>
+                </b-dropdown-group>
+              </b-nav-item-dropdown>
               <b-nav-item-dropdown text="SuperAdmin" v-if="showSuperAdminMenu">
                 <b-dropdown-item href="/superadmin" >
                     SuperAdmin Board
