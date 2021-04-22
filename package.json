@@ -18,6 +18,7 @@
     "jquery": "^3.4.1",
     "moment": "^2.29.1",
     "popper.js": "^1.15.0",
+    "printd": "^1.4.2",
     "v-money": "^0.8.1",
     "vee-validate": "^2.2.15",
     "vue": "^2.6.10",

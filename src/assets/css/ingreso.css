@@ -1,0 +1,20 @@
+.Linea {  
+  width:50px;
+}
+.Cantidad {  
+  width:85px;
+}
+.Codigo {  
+  width:130px;
+}
+.CostoUnitario  {  
+  width:100px;
+}
+.CostoTotal  {  
+  width:100px;
+}
+.card-container.card {
+  max-width: 1280px !important;
+  padding: 40px 40px;
+}
+

@@ -283,7 +283,7 @@ export default {
           .then(response => {
             this.mensaje=response.data.message;
             this.successful = true;
-            this.$router.push('/Vendedores/ListarVendedores');
+            setTimeout(()=>{this.$router.push('/Vendedores/ListarVendedores');}, 2000);
           })
           .catch( error => {
               this.mensaje=error.response.data.message;

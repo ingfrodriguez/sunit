@@ -26,14 +26,14 @@
               <b-row class="mt-2">
                 <b-col md="6">
                   <div class="form-group">
-                    <b-input-group prepend="Tipo de Ingreso" class="mb-2">
+                    <b-input-group prepend="Tipo de Salida" class="mb-2">
                       <b-form-select
-                        v-model="Ingreso.TipoIngresoId"
-                        :options="TiposIngreso"
+                        v-model="Salida.TipoSalidaId"
+                        :options="TiposSalidas"
                         value-field="id"
                         text-field="Nombre"
                         :disabled =BanderaVer
-                        @change="cambioingreso()"
+                        @change="cambiosalida()"
                       ></b-form-select>
                     </b-input-group>
                   </div>
@@ -41,7 +41,7 @@
                 <b-col md="6" v-if="Compras"> 
                   <b-input-group prepend="Factura" class="mb-2">
                     <input
-                      v-model="Ingreso.SerieNumero"
+                      v-model="Salida.SerieNumero"
                       v-validate="'required|min:3|max:70'"
                       class="form-control"
                       name="SerieNumero"
@@ -49,7 +49,7 @@
                       placeholder="Serie"
                     />
                     <input
-                      v-model="Ingreso.FacturaNumero"
+                      v-model="Salida.FacturaNumero"
                       v-validate="'required|min:3|max:70'"
                       class="form-control"
                       name="FacturaNumero"
@@ -71,10 +71,21 @@
                   </div>
                 </b-col>
                 <b-col md="6" v-if="Compras">
-                  <b-input-group prepend="Proveedor" class="mb-2">
+                  <b-input-group prepend="Cliente" class="mb-2">
                     <b-form-select
-                      v-model="Ingreso.ProveedorId"
-                      :options="Proveedores"
+                      v-model="Salida.ClienteId"
+                      :options="Clientes"
+                      value-field="id"
+                      text-field="Nombre"
+                      :disabled =BanderaVer
+                    ></b-form-select>
+                  </b-input-group>
+                </b-col>
+                <b-col md="6" v-if="Compras">
+                  <b-input-group prepend="Vendedor" class="mb-2">
+                    <b-form-select
+                      v-model="Salida.VendedorId"
+                      :options="Vendedores"
                       value-field="id"
                       text-field="Nombre"
                       :disabled =BanderaVer
@@ -84,7 +95,7 @@
                 <b-col md="6">
                   <b-input-group prepend="Notas" class="mb-2">
                     <input
-                      v-model="Ingreso.Notas"
+                      v-model="Salida.Notas"
                       class="form-control"                      
                       placeholder="Notas"
                       :disabled =BanderaVer
@@ -94,12 +105,12 @@
               </b-row>
               <b-row>
                 <b-col md="12">
-                  <h3 class="mb-3 mt-5">Detalle del Ingreso</h3>
+                  <h3 class="mb-3 mt-5">Detalle de la Salida</h3>
                   <b-table
                     responsive
                     striped
                     hover
-                    :items="IngresoDetalle"
+                    :items="SalidaDetalle"
                     :fields="fields"
                   >
                   <template #cell(Linea)="data">
@@ -138,7 +149,7 @@
               <b-row>
                 <b-col>
                   <button class="btn btn-primary mt-4" v-if="!BanderaVer">
-                    Ingresar Productos
+                    Salida de Productos
                   </button>
                 </b-col>
               </b-row>
@@ -154,7 +165,7 @@
         {{ mensaje }}
       </div>
       <b-modal ok-only ok-title="Cerrar" size="xl" id="my-modal">
-        <componentelistadoproductos BanderaSeleccionar=true @select="selectProducto"></componentelistadoproductos>
+        <componentelistadoproductos BanderaSeleccionar:true @select="selectProducto"></componentelistadoproductos>
 
       </b-modal>
     </div>
@@ -175,7 +186,7 @@ export default {
   data() {
     return {
       content: '',
-      titulo:'Ingreso a Inventario',
+      titulo:'Salida de Inventario',
       BanderaVer:false,
       idContacto: 0,
       LineaSeleccionada:null,
@@ -183,13 +194,14 @@ export default {
       BanderaSeguridad: false,
       submitted: false,
       successful: false,
-      TiposIngreso: [],
-      Proveedores: [],
-      Ingreso: {
+      TiposSalidas: [],
+      Clientes: [],
+      Vendedores: [],
+      Salida: {
         FacturaNumero: null,
         SerieNumero: null,
-        TipoIngresoId: null,
-        ProveedorId: 1,
+        TipoSalidaId: null,
+        ClienteId: 1,
         Notas:null
       },
       fields: [
@@ -202,14 +214,14 @@ export default {
         { key: 'CostoTotal' },
         { key: 'Eliminar',label:'' }
       ],
-      IngresoDetalle: [
+      SalidaDetalle: [
          { BanderaTotal:true,BanderaProducto:true,_rowVariant: null,Linea:0,ProductoId:null,Codigo:null,ProductoNombre:'',Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
       ],
     };
   },
   computed: {
     Compras() {
-      if (this.Ingreso.TipoIngresoId == 1) {
+      if (this.Salida.TipoSalidaId == 1) {
         return true;
       } else {
         return false;
@@ -220,40 +232,47 @@ export default {
     this.BanderaVer= this.$route.params.ver
     if (this.BanderaVer){
       axios
-        .get(this.$IPServidor + '/api/VerIngreso', {
+        .get(this.$IPServidor + '/api/VerSalida', {
           params: {
             id: this.$route.params.id,
           },
           headers: authHeader(),
         })
         .then((response) => {
-          for (var i = 0; i < response.data.IngresosDetalles.length; i++) {
-            response.data.IngresosDetalles[i].Linea=i+1
-            response.data.IngresosDetalles[i].Codigo=response.data.IngresosDetalles[i].Producto.Codigo
-            response.data.IngresosDetalles[i].ProductoNombre=response.data.IngresosDetalles[i].Producto.Nombre
-            response.data.IngresosDetalles[i].UnidadMedida=response.data.IngresosDetalles[i].Producto.UnidadesMedida.Nombre
+          for (var i = 0; i < response.data.SalidasDetalles.length; i++) {
+            response.data.SalidasDetalles[i].Linea=i+1
+            response.data.SalidasDetalles[i].Codigo=response.data.SalidasDetalles[i].Producto.Codigo
+            response.data.SalidasDetalles[i].ProductoNombre=response.data.SalidasDetalles[i].Producto.Nombre
+            response.data.SalidasDetalles[i].UnidadMedida=response.data.SalidasDetalles[i].Producto.UnidadesMedida.Nombre
           }
-          this.Ingreso = response.data;
-          this.titulo='Ingreso a Inventario No. '  + this.Ingreso.id
-          this.IngresoDetalle = response.data.IngresosDetalles;
+          this.Salida = response.data;
+          this.titulo='Salida de Inventario No. '  + this.Salida.id
+          this.SalidaDetalle = response.data.SalidasDetalles;
         });
 
     } else {
-      this.titulo='Ingreso a Inventario'
+      this.titulo='Salida de Inventario'
     }
     axios
-      .get(this.$IPServidor + '/api/ListarProveedoresSinInclude', {
+      .get(this.$IPServidor + '/api/ListarVendedores', {
         headers: authHeader(),
       })
       .then((response) => {
-        this.Proveedores = response.data;
+        this.Vendedores = response.data;
       });
     axios
-      .get(this.$IPServidor + '/api/ListarTiposIngreso', {
+      .get(this.$IPServidor + '/api/ListarClientesSinInclude', {
         headers: authHeader(),
       })
       .then((response) => {
-        this.TiposIngreso = response.data;
+        this.Clientes = response.data;
+      });
+    axios
+      .get(this.$IPServidor + '/api/ListarTiposSalida', {
+        headers: authHeader(),
+      })
+      .then((response) => {
+        this.TiposSalidas = response.data;
       });
     axios;
 
@@ -285,11 +304,11 @@ export default {
       const d = new Printd()
       d.print( document.getElementById('myelement'),styles)
     },
-    cambioingreso(){
-      if(this.Ingreso.TipoIngresoId!=1){
-        this.Ingreso.FacturaNumero=null
-        this.Ingreso.SerieNumero=null 
-        this.Ingreso.ProveedorId=null 
+    cambiosalida(){
+      if(this.Salida.TipoSalidaId!=1){
+        this.Salida.FacturaNumero=null
+        this.Salida.SerieNumero=null 
+        this.Salida.ClienteId=null 
       }
     },
     abrircomponente(id){
@@ -298,39 +317,39 @@ export default {
     },
     selectProducto(plan){
       this.$bvModal.hide('my-modal')
-      var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(this.LineaSeleccionada);
-      this.IngresoDetalle[Index].Codigo=plan
+      var Index = this.SalidaDetalle.map(function(item) { return item.Linea; }).indexOf(this.LineaSeleccionada);
+      this.SalidaDetalle[Index].Codigo=plan
       this.NombreProducto(this.LineaSeleccionada,plan)
     },
     sumar(numerobuscar,Cantidad,CostoUnitario){
-      var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+      var Index = this.SalidaDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
       let total=this.round(Cantidad*CostoUnitario,2)
       if(Number.isNaN(total)){        
-        this.IngresoDetalle[Index].BanderaTotal=false
+        this.SalidaDetalle[Index].BanderaTotal=false
       } else{
-        this.IngresoDetalle[Index].BanderaTotal=true
+        this.SalidaDetalle[Index].BanderaTotal=true
       }
-      if(Number.isNaN(total) || !this.IngresoDetalle[Index].BanderaProducto){        
-        this.IngresoDetalle[Index]._rowVariant='danger'
+      if(Number.isNaN(total) || !this.SalidaDetalle[Index].BanderaProducto){        
+        this.SalidaDetalle[Index]._rowVariant='danger'
       } else{
-        this.IngresoDetalle[Index]._rowVariant=null
+        this.SalidaDetalle[Index]._rowVariant=null
       }
-      this.IngresoDetalle[Index].CostoTotal=total
+      this.SalidaDetalle[Index].CostoTotal=total
     },
     Agregar(){
-      this.IngresoDetalle.push(
+      this.SalidaDetalle.push(
         { BanderaTotal:true,BanderaProducto:true,_rowVariant: null,Linea:0,ProductoId:null,Codigo:null,ProductoNombre:'',Cantidad: 0, CostoUnitario: 0,CostoTotal:0 }
       )
-      for (var i = 0; i < this.IngresoDetalle.length; i++) {
-        this.IngresoDetalle[i].Linea=i+1
+      for (var i = 0; i < this.SalidaDetalle.length; i++) {
+        this.SalidaDetalle[i].Linea=i+1
       }
     },
     Eliminar(numerobuscar){
-      var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
-      this.IngresoDetalle.splice(Index, 1);
-      //for (const value of this.IngresoDetalle) {
-      for (var i = 0; i < this.IngresoDetalle.length; i++) {
-        this.IngresoDetalle[i].Linea=i+1
+      var Index = this.SalidaDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+      this.SalidaDetalle.splice(Index, 1);
+      //for (const value of this.SalidaDetalle) {
+      for (var i = 0; i < this.SalidaDetalle.length; i++) {
+        this.SalidaDetalle[i].Linea=i+1
       }
     },
     NombreProducto(numerobuscar,Codigo){
@@ -343,27 +362,27 @@ export default {
             }
           })
       .then((response) => {
-        var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
-        this.IngresoDetalle[Index].ProductoNombre=response.data.Nombre
-        this.IngresoDetalle[Index].ProductoId=response.data.id
-        this.IngresoDetalle[Index].BanderaProducto=true
-        this.IngresoDetalle[Index].UnidadMedida=response.data.UnidadesMedida.Nombre
-        if(this.IngresoDetalle[Index].BanderaTotal && this.IngresoDetalle[Index].BanderaProducto){
-          this.IngresoDetalle[Index]._rowVariant=null
+        var Index = this.SalidaDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+        this.SalidaDetalle[Index].ProductoNombre=response.data.Nombre
+        this.SalidaDetalle[Index].ProductoId=response.data.id
+        this.SalidaDetalle[Index].BanderaProducto=true
+        this.SalidaDetalle[Index].UnidadMedida=response.data.UnidadesMedida.Nombre
+        if(this.SalidaDetalle[Index].BanderaTotal && this.SalidaDetalle[Index].BanderaProducto){
+          this.SalidaDetalle[Index]._rowVariant=null
         } else{
-          this.IngresoDetalle[Index]._rowVariant='danger'
+          this.SalidaDetalle[Index]._rowVariant='danger'
         }
         
       })
       .catch(() => {
-        var Index = this.IngresoDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
-        this.IngresoDetalle[Index].ProductoNombre='Código Incorrecto'
-        this.IngresoDetalle[Index].ProductoId=null
-        this.IngresoDetalle[Index].BanderaProducto=false
-        if(this.IngresoDetalle[Index].BanderaTotal && this.IngresoDetalle[Index].BanderaProducto){
-          this.IngresoDetalle[Index]._rowVariant=null
+        var Index = this.SalidaDetalle.map(function(item) { return item.Linea; }).indexOf(numerobuscar);
+        this.SalidaDetalle[Index].ProductoNombre='Código Incorrecto'
+        this.SalidaDetalle[Index].ProductoId=null
+        this.SalidaDetalle[Index].BanderaProducto=false
+        if(this.SalidaDetalle[Index].BanderaTotal && this.SalidaDetalle[Index].BanderaProducto){
+          this.SalidaDetalle[Index]._rowVariant=null
         } else{
-          this.IngresoDetalle[Index]._rowVariant='danger'
+          this.SalidaDetalle[Index]._rowVariant='danger'
         }
       });
     },
@@ -375,16 +394,16 @@ export default {
           axios({
             method:'POST',
             headers: authHeader(),
-            url:this.$IPServidor + '/api/IngresoInventario',
+            url:this.$IPServidor + '/api/SalidaInventario',
             params:{
-              Ingreso:this.Ingreso,
-              IngresoDetalle:this.IngresoDetalle
+              Salida:this.Salida,
+              SalidaDetalle:this.SalidaDetalle
             }
           })
             .then((response) => {
               this.mensaje = response.data.message;
               this.successful = true;
-              setTimeout(()=>{this.$router.push('/inventario/listaringresos');}, 2000);
+              setTimeout(()=>{this.$router.push('/Inventario/ListarSalidas');}, 2000);
             })
             .catch((error) => {
               this.mensaje = error.response.data.message;

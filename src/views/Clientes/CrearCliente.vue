@@ -358,7 +358,7 @@ export default {
           .then(response => {
             this.mensaje=response.data.message;
             this.successful = true;
-            this.$router.push('/Clientes/ListarClientes');
+            setTimeout(()=>{this.$router.push('/Clientes/ListarClientes');}, 2000);
           })
           .catch( error => {
               this.mensaje=error.response.data.message;

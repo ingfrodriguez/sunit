@@ -54,6 +54,9 @@
                   <b-dropdown-item href="/Inventario/Ingreso" >
                       Ingreso de Producto a Inventario
                   </b-dropdown-item>
+                  <b-dropdown-item href="/Inventario/Salida" >
+                      Salida de Producto de Inventario
+                  </b-dropdown-item>
                   <b-dropdown-item href="/admin" >
                       Admin Board
                   </b-dropdown-item>
@@ -63,6 +66,16 @@
                 <b-dropdown-group id="dropdown-group-1" header="Inventario">
                   <b-dropdown-item href="/Inventario/ListarIngresos" >
                       Consulta de Ingresos
+                  </b-dropdown-item>
+                  <b-dropdown-item href="/Inventario/ListarSalidas" >
+                      Consulta de Salidas
+                  </b-dropdown-item>
+                </b-dropdown-group>
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown text="Reportes"  v-if="showAdminMenu">
+                <b-dropdown-group id="dropdown-group-1" header="Inventario">
+                  <b-dropdown-item href="/Reportes/Kardex" >
+                      Kardex
                   </b-dropdown-item>
                 </b-dropdown-group>
               </b-nav-item-dropdown>

@@ -234,12 +234,30 @@ export const router = new Router({
       }
     },
     {
+      path: '/Inventario/Salida',
+      name: 'SalidaInventario',
+      // lazy-loaded
+      component: () => import('./views/Inventario/Salida.vue'),
+      meta: {
+        title: 'Salida Inventario'
+      }
+    },
+    {
       path: '/Inventario/ListarIngresos',
       name: 'ListarIngresos',
       // lazy-loaded
       component: () => import('./views/Inventario/ListarIngresos.vue'),
       meta: {
         title: 'Listado de Ingresos'
+      }
+    },
+    {
+      path: '/Inventario/ListarSalidas',
+      name: 'ListarSalidas',
+      // lazy-loaded
+      component: () => import('./views/Inventario/ListarSalidas.vue'),
+      meta: {
+        title: 'Listado de Salidas'
       }
     },
     {
@@ -250,6 +268,20 @@ export const router = new Router({
       meta: {
         title: 'Ver Ingreso'
       }
+    },
+    //-------------------REPORTES-------------------
+    {
+      path: '/Reportes/Kardex',
+      name: 'Kardex',
+      // lazy-loaded
+      component: () => import('./views/Reportes/Kardex.vue'),
+      meta: {
+        title: 'Kardex'
+      }
+    },
+    {
+      path :'*',
+      component: () => import('./views/Home.vue'),
     }
   ]
 });
