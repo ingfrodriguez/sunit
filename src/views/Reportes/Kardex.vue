@@ -17,33 +17,47 @@
             </b-row>
           </header>
         </b-col>
-        <b-col cols="3">
-          
+      </b-row>
+      <b-row class="mb-3">
+        <b-col cols="5" >
+          <b-input-group prepend="Del" >
+            <b-form-input v-model="CodigoProducto" placeholder="Código del producto"></b-form-input>
+          </b-input-group>
+        </b-col>
+        <b-col cols="2">
+          <button class="btn btn-primary" v-on:click="Filtrar()">
+                    Filtrar
+          </button>
         </b-col>
       </b-row>
       <b-row>
-        
+        <b-col>
+          <h3>{{Nombre}}</h3>--cambiar a codigo
+        </b-col>
       </b-row>
-      
-      <b-table
-        striped
-        hover
-        :items="items"
-        :fields="fields"
-        responsive
-        :per-page="perPage"
-        :current-page="currentPage"
-        :filter="filter"
-        @filtered="onFiltered"
-      >
-        <template #cell(Ver)="data">
-          <b-link
-            :to="{ name: 'IngresoInventario', params: { id: data.item.id,ver:true } }"
-            ><b-button variant="outline-secondary" size="sm"
-              ><b-icon font-scale="1" icon="search"></b-icon></b-button
-          ></b-link>
-        </template>
-      </b-table>
+      <b-row>
+        <b-col>
+          <b-table
+            striped
+            hover
+            :items="items"
+            :fields="fields"
+            responsive
+            :per-page="perPage"
+            :current-page="currentPage"
+            :filter="filter"
+            @filtered="onFiltered"
+          >
+            <template #cell(Ver)="data">
+              <b-link
+                :to="{ name: 'IngresoInventario', params: { id: data.item.id,ver:true } }"
+                ><b-button variant="outline-secondary" size="sm"
+                  ><b-icon font-scale="1" icon="search"></b-icon></b-button
+              ></b-link>
+            </template>
+          </b-table>
+        </b-col>
+      </b-row>
       <b-row>
         <b-col sm="7" md="6" class="mt-2">
           <b-pagination
@@ -56,6 +70,7 @@
             pills
           ></b-pagination>
         </b-col>
+        {{items}}
       </b-row>
     </div>
   </div>
@@ -70,16 +85,15 @@ export default {
   data() {
     return {
       content: '',
+      Nombre:'',
       Al:null,
       Del:null,
-      Correlativo:null,
+      CodigoProducto:null,
       BanderaSeguridad: false,
       fields: [
         { key: 'id'},
         { key: 'fecha'},
         { key: 'tipomovimiento'},
-        { key: 'productoid'},
-        { key: 'Nombre'},
         { key: 'Cantidad'},
         { key: 'CostoUnitario'},
         { key: 'CostoTotal'},
@@ -94,15 +108,7 @@ export default {
   },
   computed: {},
   mounted() {
-    axios
-      .get(this.$IPServidor + '/api/kardex', {
-        headers: authHeader(),
-      })
-      .then((response) => {
-        console.log(response.data)
-        this.items = response.data;
-        this.totalRows = this.items.length
-      });
+    
     UserService.getAdminBoard().then(
       (response) => {
         this.content = response.data;
@@ -124,16 +130,43 @@ export default {
       axios({
             method:'GET',
             headers: authHeader(),
-            url:this.$IPServidor + '/api/ListarIngresos',
+            url:this.$IPServidor + '/api/kardex',
             params:{
-              Del:this.Del,
-              Al:this.Al,
-              Correlativo:this.Correlativo
+              CodigoProducto:this.CodigoProducto
             }
           })
       .then((response) => {
-        this.items = response.data;
-        this.totalRows = this.items.length
+        if (this.items){
+          this.items = response.data;
+          this.Nombre='Producto id: '+this.items[0].id+' Nombre: '+this.items[0].Nombre
+           // eslint-disable-next-line
+          var Saldo=0  
+          // eslint-disable-next-line
+          var ExistenciaTotal=0 
+          for (var i = 0; i < this.items.length; i++) {
+            if(this.items[i].operacion=='i'){
+              Saldo+=this.items[i].CostoTotal
+              ExistenciaTotal+=this.items[i].Cantidad
+            }
+            if(this.items[i].operacion=='s'){
+              Saldo-=this.items[i].CostoTotal
+              ExistenciaTotal-=this.items[i].Cantidad
+            }
+            this.items[i].Saldo=this.items[i].CostoTotal
+          }
+          this.items.push(
+            {Saldo:Saldo,Cantidad:ExistenciaTotal}
+          )
+        }
+        else{
+          this.items=null
+          this.Nombre=''
+        }
+        
+        
+      })
+      .catch(() => {
+        
       });
     },
     onFiltered(filteredItems) {
