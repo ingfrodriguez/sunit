@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div>
     <header class="jumbotron" v-if="!BanderaSeguridad">
       <h3>{{ content }}</h3>
     </header>
-    <div class="col-md-12 mt-3 card card-container" v-if="BanderaSeguridad">
+    <div v-if="BanderaSeguridad">
       <b-row>
         <b-col cols="9">
           <header>
@@ -20,9 +20,12 @@
       </b-row>
       <b-row class="mb-3">
         <b-col cols="5" >
-          <b-input-group prepend="Del" >
+          <b-input-group prepend="Codigo del Producto" >
             <b-form-input v-model="CodigoProducto" placeholder="Código del producto"></b-form-input>
           </b-input-group>
+        </b-col>
+        <b-col>
+          
         </b-col>
         <b-col cols="2">
           <button class="btn btn-primary" v-on:click="Filtrar()">
@@ -32,7 +35,7 @@
       </b-row>
       <b-row>
         <b-col>
-          <h3>{{Nombre}}</h3>--cambiar a codigo
+          <h3>{{Nombre}}</h3>
         </b-col>
       </b-row>
       <b-row>
@@ -48,6 +51,14 @@
             :filter="filter"
             @filtered="onFiltered"
           >
+            <template #thead-top="">
+              <b-tr>
+                <b-th colspan="3"></b-th>
+                <b-th colspan="3" variant="info">Ingresos</b-th>
+                <b-th colspan="3">Salidas</b-th>
+                <b-th colspan="3" variant="info">Saldos</b-th>
+              </b-tr>
+            </template>
             <template #cell(Ver)="data">
               <b-link
                 :to="{ name: 'IngresoInventario', params: { id: data.item.id,ver:true } }"
@@ -70,7 +81,6 @@
             pills
           ></b-pagination>
         </b-col>
-        {{items}}
       </b-row>
     </div>
   </div>
@@ -94,10 +104,15 @@ export default {
         { key: 'id'},
         { key: 'fecha'},
         { key: 'tipomovimiento'},
-        { key: 'Cantidad'},
-        { key: 'CostoUnitario'},
-        { key: 'CostoTotal'},
-        { key: 'Saldo'},
+        { key: 'ingresocantidad',variant: 'info',label:'Cantidad'},
+        { key: 'ingresocostounitario',variant: 'info',label:'Costo Unitario'},
+        { key: 'ingresocostototal',variant: 'info',label:'Costo Total'},
+        { key: 'salidacantidad',label:'Cantidad'},
+        { key: 'salidacostounitario',label:'Costo Unitario'},
+        { key: 'salidacostototal',label:'Costo Total'},
+        { key: 'saldocantidad',variant: 'info',label:'Cantidad'},
+        { key: 'saldocostounitario',variant: 'info',label:'Costo Unitario'},
+        { key: 'saldocostototal',variant: 'info',label:'Costo Total'},
       ],
       items: [],
       filter:null,
@@ -138,24 +153,30 @@ export default {
       .then((response) => {
         if (this.items){
           this.items = response.data;
-          this.Nombre='Producto id: '+this.items[0].id+' Nombre: '+this.items[0].Nombre
+          this.Nombre='Producto Código: '+this.items[0].codigoproducto+' Nombre: '+this.items[0].nombre
            // eslint-disable-next-line
-          var Saldo=0  
+          var Saldo=0.0  
           // eslint-disable-next-line
           var ExistenciaTotal=0 
           for (var i = 0; i < this.items.length; i++) {
             if(this.items[i].operacion=='i'){
-              Saldo+=this.items[i].CostoTotal
-              ExistenciaTotal+=this.items[i].Cantidad
+              Saldo+=this.items[i].ingresocostototal*1
+              ExistenciaTotal+=this.items[i].ingresocantidad
+              this.items[i].saldocantidad=ExistenciaTotal
+              this.items[i].saldocostototal=Saldo.toFixed(2)
+              this.items[i].saldocostounitario=(Saldo.toFixed(2)/ExistenciaTotal).toFixed(2)
             }
             if(this.items[i].operacion=='s'){
-              Saldo-=this.items[i].CostoTotal
-              ExistenciaTotal-=this.items[i].Cantidad
+              Saldo-=this.items[i].salidacostototal*1
+              ExistenciaTotal-=this.items[i].salidacantidad
+              this.items[i].saldocantidad=ExistenciaTotal
+              this.items[i].saldocostototal=Saldo.toFixed(2)
+              this.items[i].saldocostounitario=(Saldo.toFixed(2)/ExistenciaTotal).toFixed(2)
             }
-            this.items[i].Saldo=this.items[i].CostoTotal
+            this.items[i].Saldo=Saldo.toFixed(2)
           }
           this.items.push(
-            {Saldo:Saldo,Cantidad:ExistenciaTotal}
+            {saldocostototal:Saldo.toFixed(2),saldocantidad:ExistenciaTotal}
           )
         }
         else{
@@ -179,3 +200,9 @@ export default {
 };
 </script>
 
+
+<style>
+.container {
+    max-width: 1300px;
+}
+</style>

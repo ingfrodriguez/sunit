@@ -165,7 +165,7 @@
         {{ mensaje }}
       </div>
       <b-modal ok-only ok-title="Cerrar" size="xl" id="my-modal">
-        <componentelistadoproductos BanderaSeleccionar:true @select="selectProducto"></componentelistadoproductos>
+        <componentelistadoproductos BanderaSeleccionar=true @select="selectProducto"></componentelistadoproductos>
 
       </b-modal>
     </div>
