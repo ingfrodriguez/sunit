@@ -59,13 +59,20 @@
                 <b-th colspan="3" variant="info">Saldos</b-th>
               </b-tr>
             </template>
-            <template #cell(Ver)="data">
-              <b-link
-                :to="{ name: 'IngresoInventario', params: { id: data.item.id,ver:true } }"
-                ><b-button variant="outline-secondary" size="sm"
-                  ><b-icon font-scale="1" icon="search"></b-icon></b-button
-              ></b-link>
+
+            <template #cell(id)="data">
+              <b-link v-if="data.item.operacion=='i'"
+              :to="{ name: 'IngresoInventario', params: { id: data.item.id,ver:true} }"
+              >
+                <b-icon font-scale="1" icon="box-arrow-up-right"></b-icon>                
+              </b-link>
+              <b-link v-if="data.item.operacion=='s'"
+              :to="{ name: 'SalidaInventario', params: { id: data.item.id,ver:true} }"
+              >
+                <b-icon font-scale="1" icon="box-arrow-up-right"></b-icon>                
+              </b-link>
             </template>
+            
           </b-table>
         </b-col>
       </b-row>
@@ -90,7 +97,10 @@
 import axios from 'axios';
 import UserService from '../../services/user.service';
 import authHeader from '../../services/auth-header';
+
+
 export default {
+  
   name: 'Listar',
   data() {
     return {
@@ -98,21 +108,21 @@ export default {
       Nombre:'',
       Al:null,
       Del:null,
-      CodigoProducto:null,
+      CodigoProducto:'VAL-01',
       BanderaSeguridad: false,
       fields: [
-        { key: 'id'},
+        { key: 'id',label:'Ver'},
         { key: 'fecha'},
-        { key: 'tipomovimiento'},
-        { key: 'ingresocantidad',variant: 'info',label:'Cantidad'},
-        { key: 'ingresocostounitario',variant: 'info',label:'Costo Unitario'},
-        { key: 'ingresocostototal',variant: 'info',label:'Costo Total'},
-        { key: 'salidacantidad',label:'Cantidad'},
-        { key: 'salidacostounitario',label:'Costo Unitario'},
-        { key: 'salidacostototal',label:'Costo Total'},
-        { key: 'saldocantidad',variant: 'info',label:'Cantidad'},
-        { key: 'saldocostounitario',variant: 'info',label:'Costo Unitario'},
-        { key: 'saldocostototal',variant: 'info',label:'Costo Total'},
+        { key: 'tipomovimiento',label:'Detalle'},
+        { key: 'ingresocantidad',variant: 'info',label:'Cant.'},
+        { key: 'ingresocostounitario',variant: 'info',label:'C.U.'},
+        { key: 'ingresocostototal',variant: 'info',label:'C.T.'},
+        { key: 'salidacantidad',label:'Cant.'},
+        { key: 'salidacostounitario',label:'C.U.'},
+        { key: 'salidacostototal',label:'C.T.'},
+        { key: 'saldocantidad',variant: 'info',label:'Cant.'},
+        { key: 'saldocostounitario',variant: 'info',label:'C.P.'},
+        { key: 'saldocostototal',variant: 'info',label:'C.T.'},
       ],
       items: [],
       filter:null,
@@ -153,12 +163,15 @@ export default {
       .then((response) => {
         if (this.items){
           this.items = response.data;
-          this.Nombre='Producto Código: '+this.items[0].codigoproducto+' Nombre: '+this.items[0].nombre
+          this.Nombre='Producto Código: '+this.items[0].codigoproducto+', Nombre: '+this.items[0].nombre
            // eslint-disable-next-line
           var Saldo=0.0  
           // eslint-disable-next-line
           var ExistenciaTotal=0 
           for (var i = 0; i < this.items.length; i++) {
+            //inicio conversión fecha aprovechando el for
+            this.items[i].fecha=this.$func.format_date(this.items[i].fecha)
+            //fin conversión fecha aprovechando el for
             if(this.items[i].operacion=='i'){
               Saldo+=this.items[i].ingresocostototal*1
               ExistenciaTotal+=this.items[i].ingresocantidad

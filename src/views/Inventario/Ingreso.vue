@@ -31,18 +31,26 @@
                         v-model="Ingreso.TipoIngresoId"
                         :options="TiposIngreso"
                         value-field="id"
+                        v-validate="'required'"
                         text-field="Nombre"
+                        name='TipoIngresoId'
                         :disabled =BanderaVer
                         @change="cambioingreso()"
                       ></b-form-select>
                     </b-input-group>
+                    <div
+                      v-if="submitted && errors.has('TipoIngresoId')"
+                      class="alert-danger"
+                    >
+                      {{ errors.first('TipoIngresoId') }}
+                    </div>
                   </div>
                 </b-col>
                 <b-col md="6" v-if="Compras"> 
                   <b-input-group prepend="Factura" class="mb-2">
                     <input
                       v-model="Ingreso.SerieNumero"
-                      v-validate="'required|min:3|max:70'"
+                      v-validate="'required|min:3|max:12'"
                       class="form-control"
                       name="SerieNumero"
                       :disabled =BanderaVer
@@ -50,7 +58,7 @@
                     />
                     <input
                       v-model="Ingreso.FacturaNumero"
-                      v-validate="'required|min:3|max:70'"
+                      v-validate="'required|min:3|max:12'"
                       class="form-control"
                       name="FacturaNumero"
                       :disabled =BanderaVer
@@ -90,6 +98,13 @@
                       :disabled =BanderaVer
                     />
                   </b-input-group>
+                </b-col>
+                <b-col md="6">
+                  <div class="form-group">
+                        <input type="file" @change="upload" ref="file"  v-if="!BanderaVer && !Guardado" accept="image/*">
+                        <b-alert variant="success" show v-if="!BanderaVer && Guardado">Documento adjunto!</b-alert>
+                        <b-button v-if="BanderaVer" @click="bajarDocumento()">Bajar Documento</b-button>
+                  </div>
                 </b-col>
               </b-row>
               <b-row>
@@ -167,6 +182,7 @@ import UserService from '../../services/user.service';
 import authHeader from '../../services/auth-header';
 import Componentelistadoproductos from '@/components/Componentelistadoproductos'
 import { Printd } from 'printd'
+import UploadService from "../../services/UploadFilesService";
 
 export default {
   components:{
@@ -177,6 +193,7 @@ export default {
       content: '',
       titulo:'Ingreso a Inventario',
       BanderaVer:false,
+      Guardado:false,
       idContacto: 0,
       LineaSeleccionada:null,
       mensaje: '',
@@ -185,6 +202,9 @@ export default {
       successful: false,
       TiposIngreso: [],
       Proveedores: [],
+      documento:"sinImagen.jpg",
+      currentImage:null,
+      NombreImagen:'',
       Ingreso: {
         FacturaNumero: null,
         SerieNumero: null,
@@ -234,7 +254,8 @@ export default {
             response.data.IngresosDetalles[i].UnidadMedida=response.data.IngresosDetalles[i].Producto.UnidadesMedida.Nombre
           }
           this.Ingreso = response.data;
-          this.titulo='Ingreso a Inventario No. '  + this.Ingreso.id
+          this.titulo='Ingreso a Inventario No. '  + this.Ingreso.id;
+          //this.factura="upload/"+this.Ingreso.id+".jpg";
           this.IngresoDetalle = response.data.IngresosDetalles;
         });
 
@@ -370,7 +391,7 @@ export default {
     handle() {
       this.message = '';
       this.submitted = true;
-      this.$validator.validate().then((isValid) => {
+      this.$validator.validate().then(isValid => {
         if (isValid) {
           axios({
             method:'POST',
@@ -383,6 +404,7 @@ export default {
           })
             .then((response) => {
               this.mensaje = response.data.message;
+              //this.upload(response.data.id+'.jpg');
               this.successful = true;
               setTimeout(()=>{this.$router.push('/inventario/listaringresos');}, 2000);
             })
@@ -393,6 +415,32 @@ export default {
         }
       });
     },
+    upload() {      
+      this.currentImage = this.$refs.file.files.item(0);                            
+      UploadService.upload(this.currentImage)
+      .then((response) => {
+        this.NombreImagen=response.data.nombre
+        this.Guardado=true;
+        //this.mensaje = response.data.message;
+      })
+      .catch((err) => {
+        this.mensaje = "Could not upload the image! "+err.response.data.message ;
+        this.successful = false;
+        this.currentImage = undefined;
+      });
+    },
+    bajarDocumento() {      
+      axios({
+            url:this.$IPServidor + '/files/'+this.Ingreso.id+".jpg",
+          })
+      .then(() => {
+        window.open(this.$IPServidor + '/files/'+this.Ingreso.id+".jpg", '_blank');        
+      })
+      .catch((err) => {
+        this.mensaje = err.response.data.message;
+              this.successful = false;
+      });
+    }
   },
 };
 </script>
