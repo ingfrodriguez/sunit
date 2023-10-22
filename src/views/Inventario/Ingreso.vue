@@ -7,7 +7,7 @@
       <header>
         <b-row class="mb-4" align-v="center">
           <b-col md="1"
-            ><b-avatar variant="primary" icon="people-fill"></b-avatar
+            ><b-avatar variant="primary" icon="box"></b-avatar
           ></b-col>
           <b-col md="10"
             ><h1 class="text-primary">{{titulo}}</h1>
@@ -210,7 +210,8 @@ export default {
         SerieNumero: null,
         TipoIngresoId: null,
         ProveedorId: 1,
-        Notas:null
+        Notas:null,
+        Documento:null
       },
       fields: [
         { key: 'Linea' },
@@ -419,8 +420,9 @@ export default {
       this.currentImage = this.$refs.file.files.item(0);                            
       UploadService.upload(this.currentImage)
       .then((response) => {
-        this.NombreImagen=response.data.nombre
+        this.NombreImagen=response.data.nombreArchivo
         this.Guardado=true;
+        this.Ingreso.Documento=this.NombreImagen
         //this.mensaje = response.data.message;
       })
       .catch((err) => {
@@ -431,10 +433,11 @@ export default {
     },
     bajarDocumento() {      
       axios({
-            url:this.$IPServidor + '/files/'+this.Ingreso.id+".jpg",
+            url:this.$IPServidor + '/files/'+this.Ingreso.Documento,
           })
       .then(() => {
-        window.open(this.$IPServidor + '/files/'+this.Ingreso.id+".jpg", '_blank');        
+        window.open(this.$IPServidor + '/files/'+this.Ingreso.Documento, '_blank');        
+        this.mensaje = null
       })
       .catch((err) => {
         this.mensaje = err.response.data.message;
