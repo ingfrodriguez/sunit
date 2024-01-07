@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="card mt-3 card-container" >
     <header class="jumbotron" v-if="!BanderaSeguridad">
       <h3>{{ content }}</h3>
     </header>
@@ -11,31 +11,43 @@
               <b-col md="2"
                 ><b-avatar variant="primary" icon="person"></b-avatar
               ></b-col>
-              <b-col md="10"
-                ><h1 class="text-primary">Reporte Kardex</h1></b-col
-              >
+              <b-col md="8"><h1 class="text-primary">Reporte Kardex </h1></b-col>
+              <b-col md="2">
+                <b-icon
+                  font-scale="2"
+                  icon="printer"
+                  v-on:click="Imprimir()"
+                  class="mr-2"
+                ></b-icon>
+              </b-col>
             </b-row>
           </header>
         </b-col>
       </b-row>
       <b-row class="mb-3">
-        <b-col cols="5" >
-          <b-input-group prepend="Codigo del Producto" >
-            <b-form-input v-model="CodigoProducto" placeholder="Código del producto"></b-form-input>
+        <b-col cols="5">
+          <b-input-group prepend="Codigo del Producto">
+            <b-form-input
+              v-model="CodigoProducto"
+              placeholder="Código del producto"
+            ></b-form-input>
+            <b-input-group-append>
+              <b-button @click="abrircomponente()" variant="info"
+                ><b-icon class="mb-1" font-scale="0.90" icon="search"></b-icon>
+              </b-button>
+            </b-input-group-append>
           </b-input-group>
         </b-col>
-        <b-col>
-          
-        </b-col>
+        <b-col> </b-col>
         <b-col cols="2">
           <button class="btn btn-primary" v-on:click="Filtrar()">
-                    Filtrar
+            Filtrar
           </button>
         </b-col>
       </b-row>
       <b-row>
         <b-col>
-          <h3>{{Nombre}}</h3>
+          <h3>{{ Nombre }}</h3>
         </b-col>
       </b-row>
       <b-row>
@@ -61,18 +73,25 @@
             </template>
 
             <template #cell(id)="data">
-              <b-link v-if="data.item.operacion=='i'"
-              :to="{ name: 'IngresoInventario', params: { id: data.item.id,ver:true} }"
+              <b-link
+                v-if="data.item.operacion == 'i'"
+                :to="{
+                  name: 'IngresoInventario',
+                  params: { id: data.item.id, ver: true }
+                }"
               >
-                <b-icon font-scale="1" icon="box-arrow-up-right"></b-icon>                
+                <b-icon font-scale="1" icon="box-arrow-up-right"></b-icon>
               </b-link>
-              <b-link v-if="data.item.operacion=='s'"
-              :to="{ name: 'SalidaInventario', params: { id: data.item.id,ver:true} }"
+              <b-link
+                v-if="data.item.operacion == 's'"
+                :to="{
+                  name: 'SalidaInventario',
+                  params: { id: data.item.id, ver: true }
+                }"
               >
-                <b-icon font-scale="1" icon="box-arrow-up-right"></b-icon>                
+                <b-icon font-scale="1" icon="box-arrow-up-right"></b-icon>
               </b-link>
             </template>
-            
           </b-table>
         </b-col>
       </b-row>
@@ -89,6 +108,25 @@
           ></b-pagination>
         </b-col>
       </b-row>
+      <b-modal ok-only ok-title="Cerrar" size="xl" id="my-modal">
+        <componentelistadoproductos
+          BanderaSeleccionar="true"
+          @select="selectProducto"
+        ></componentelistadoproductos>
+      </b-modal>
+      <div
+      >
+      <b-alert
+      :show=alerta
+      dismissible
+      variant="danger"      
+    >
+      No ingreso código de producto
+      
+    </b-alert>
+    
+        
+      </div>
     </div>
   </div>
 </template>
@@ -97,49 +135,51 @@
 import axios from 'axios';
 import UserService from '../../services/user.service';
 import authHeader from '../../services/auth-header';
-
+import Componentelistadoproductos from '@/components/Componentelistadoproductos';
 
 export default {
-  
+  components: {
+    Componentelistadoproductos
+  },
   name: 'Listar',
   data() {
     return {
       content: '',
-      Nombre:'',
-      Al:null,
-      Del:null,
-      CodigoProducto:'VAL-01',
+      Nombre: '',
+      Al: null,
+      Del: null,
+      alerta: 0,
+      CodigoProducto: '',
       BanderaSeguridad: false,
       fields: [
-        { key: 'id',label:'Ver'},
-        { key: 'fecha'},
-        { key: 'tipomovimiento',label:'Detalle'},
-        { key: 'ingresocantidad',variant: 'info',label:'Cant.'},
-        { key: 'ingresocostounitario',variant: 'info',label:'C.U.'},
-        { key: 'ingresocostototal',variant: 'info',label:'C.T.'},
-        { key: 'salidacantidad',label:'Cant.'},
-        { key: 'salidacostounitario',label:'C.U.'},
-        { key: 'salidacostototal',label:'C.T.'},
-        { key: 'saldocantidad',variant: 'info',label:'Cant.'},
-        { key: 'saldocostounitario',variant: 'info',label:'C.P.'},
-        { key: 'saldocostototal',variant: 'info',label:'C.T.'},
+        { key: 'id', label: 'Ver' },
+        { key: 'fecha' },
+        { key: 'tipomovimiento', label: 'Detalle' },
+        { key: 'ingresocantidad', variant: 'info', label: 'Cant.' },
+        { key: 'ingresocostounitario', variant: 'info', label: 'C.U.' },
+        { key: 'ingresocostototal', variant: 'info', label: 'C.T.' },
+        { key: 'salidacantidad', label: 'Cant.' },
+        { key: 'salidacostounitario', label: 'C.U.' },
+        { key: 'salidacostototal', label: 'C.T.' },
+        { key: 'saldocantidad', variant: 'info', label: 'Cant.' },
+        { key: 'saldocostounitario', variant: 'info', label: 'C.P.' },
+        { key: 'saldocostototal', variant: 'info', label: 'C.T.' }
       ],
       items: [],
-      filter:null,
+      filter: null,
       perPage: 10,
       totalRows: 1,
-      currentPage: 1,
+      currentPage: 1
     };
   },
   computed: {},
   mounted() {
-    
     UserService.getAdminBoard().then(
-      (response) => {
+      response => {
         this.content = response.data;
         this.BanderaSeguridad = true;
       },
-      (error) => {
+      error => {
         this.BanderaSeguridad = false;
         this.content =
           (error.response &&
@@ -151,71 +191,90 @@ export default {
     );
   },
   methods: {
-    Filtrar(){
+    Imprimir() {
+        if(this.CodigoProducto){
+          window.open(this.$IPServidor + '/api/kardexdownload/'+this.CodigoProducto, '_blank');        
+        }else{
+          this.alerta=4
+        }
+        
+    },
+    Filtrar() {
       axios({
-            method:'GET',
-            headers: authHeader(),
-            url:this.$IPServidor + '/api/kardex',
-            params:{
-              CodigoProducto:this.CodigoProducto
-            }
-          })
-      .then((response) => {
-        if (this.items){
-          this.items = response.data;
-          this.Nombre='Producto Código: '+this.items[0].codigoproducto+', Nombre: '+this.items[0].nombre
-           // eslint-disable-next-line
-          var Saldo=0.0  
-          // eslint-disable-next-line
-          var ExistenciaTotal=0 
-          for (var i = 0; i < this.items.length; i++) {
-            //inicio conversión fecha aprovechando el for
-            this.items[i].fecha=this.$func.format_date(this.items[i].fecha)
-            //fin conversión fecha aprovechando el for
-            if(this.items[i].operacion=='i'){
-              Saldo+=this.items[i].ingresocostototal*1
-              ExistenciaTotal+=this.items[i].ingresocantidad
-              this.items[i].saldocantidad=ExistenciaTotal
-              this.items[i].saldocostototal=Saldo.toFixed(2)
-              this.items[i].saldocostounitario=(Saldo.toFixed(2)/ExistenciaTotal).toFixed(2)
-            }
-            if(this.items[i].operacion=='s'){
-              Saldo-=this.items[i].salidacostototal*1
-              ExistenciaTotal-=this.items[i].salidacantidad
-              this.items[i].saldocantidad=ExistenciaTotal
-              this.items[i].saldocostototal=Saldo.toFixed(2)
-              this.items[i].saldocostounitario=(Saldo.toFixed(2)/ExistenciaTotal).toFixed(2)
-            }
-            this.items[i].Saldo=Saldo.toFixed(2)
-          }
-          this.items.push(
-            {saldocostototal:Saldo.toFixed(2),saldocantidad:ExistenciaTotal}
-          )
+        method: 'GET',
+        headers: authHeader(),
+        url: this.$IPServidor + '/api/kardex',
+        params: {
+          CodigoProducto: this.CodigoProducto
         }
-        else{
-          this.items=null
-          this.Nombre=''
-        }
-        
-        
       })
-      .catch(() => {
-        
-      });
+        .then(response => {
+          if (this.items) {
+            this.items = response.data;
+            this.totalRows = this.items.length;
+            this.Nombre =
+              'Producto Código: ' +
+              this.items[0].codigoproducto +
+              ', Nombre: ' +
+              this.items[0].nombre;
+            // eslint-disable-next-line
+            var Saldo = 0.0;
+            // eslint-disable-next-line
+            var ExistenciaTotal = 0;
+            for (var i = 0; i < this.items.length; i++) {
+              //inicio conversión fecha aprovechando el for
+              this.items[i].fecha = this.$func.format_date(this.items[i].fecha);
+              //fin conversión fecha aprovechando el for
+              if (this.items[i].operacion == 'i') {
+                Saldo += this.items[i].ingresocostototal * 1;
+                ExistenciaTotal += this.items[i].ingresocantidad;
+                this.items[i].saldocantidad = ExistenciaTotal;
+                this.items[i].saldocostototal = Saldo.toFixed(2);
+                this.items[i].saldocostounitario = (
+                  Saldo.toFixed(2) / ExistenciaTotal
+                ).toFixed(2);
+              }
+              if (this.items[i].operacion == 's') {
+                Saldo -= this.items[i].salidacostototal * 1;
+                ExistenciaTotal -= this.items[i].salidacantidad;
+                this.items[i].saldocantidad = ExistenciaTotal;
+                this.items[i].saldocostototal = Saldo.toFixed(2);
+                this.items[i].saldocostounitario = (
+                  Saldo.toFixed(2) / ExistenciaTotal
+                ).toFixed(2);
+              }
+              this.items[i].Saldo = Saldo.toFixed(2);
+            }
+            this.items.push({
+              saldocostototal: Saldo.toFixed(2),
+              saldocantidad: ExistenciaTotal
+            });
+          } else {
+            this.items = null;
+            this.Nombre = '';
+          }
+        })
+        .catch(() => {});
     },
     onFiltered(filteredItems) {
-      
-        // Trigger pagination to update the number of buttons/pages due to filtering
-        this.totalRows  = filteredItems.length
-        this.currentPage = 1
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
+    },
+    abrircomponente() {
+      this.$bvModal.show('my-modal');
+    },
+    selectProducto(plan) {
+      this.$bvModal.hide('my-modal');
+      this.CodigoProducto = plan;
+      this.Filtrar();
     }
-  },
+  }
 };
 </script>
 
-
 <style>
 .container {
-    max-width: 1300px;
+  max-width: 1300px;
 }
 </style>

@@ -102,6 +102,13 @@
                     />
                   </b-input-group>
                 </b-col>
+                <b-col md="6">
+                  <div class="form-group">
+                        <input type="file" @change="upload" ref="file"  v-if="!BanderaVer && !Guardado" accept="image/*">
+                        <b-alert variant="success" show v-if="!BanderaVer && Guardado">Documento adjunto!</b-alert>
+                        <b-button v-if="BanderaVer" @click="bajarDocumento()">Bajar Documento</b-button>
+                  </div>
+                </b-col>
               </b-row>
               <b-row>
                 <b-col md="12">
@@ -178,6 +185,7 @@ import UserService from '../../services/user.service';
 import authHeader from '../../services/auth-header';
 import Componentelistadoproductos from '@/components/Componentelistadoproductos'
 import { Printd } from 'printd'
+import UploadService from "../../services/UploadFilesService";
 
 export default {
   components:{
@@ -191,18 +199,21 @@ export default {
       idContacto: 0,
       LineaSeleccionada:null,
       mensaje: '',
+      Guardado:false,
       BanderaSeguridad: false,
       submitted: false,
       successful: false,
       TiposSalidas: [],
       Clientes: [],
       Vendedores: [],
+      NombreImagen:'',
       Salida: {
         FacturaNumero: null,
         SerieNumero: null,
         TipoSalidaId: null,
         ClienteId: 1,
-        Notas:null
+        Notas:null,
+        Documento:null
       },
       fields: [
         { key: 'Linea' },
@@ -412,6 +423,34 @@ export default {
         }
       });
     },
+    upload() {      
+      this.currentImage = this.$refs.file.files.item(0);                            
+      UploadService.upload(this.currentImage)
+      .then((response) => {
+        this.NombreImagen=response.data.nombreArchivo
+        this.Guardado=true;
+        this.Salida.Documento=this.NombreImagen
+        //this.mensaje = response.data.message;
+      })
+      .catch((err) => {
+        this.mensaje = "Could not upload the image! "+err.response.data.message ;
+        this.successful = false;
+        this.currentImage = undefined;
+      });
+    },
+    bajarDocumento() {      
+      axios({
+            url:this.$IPServidor + '/files/'+this.Salida.Documento,
+          })
+      .then(() => {
+        window.open(this.$IPServidor + '/files/'+this.Salida.Documento, '_blank');        
+        this.mensaje = null
+      })
+      .catch((err) => {
+        this.mensaje = err.response.data.message;
+              this.successful = false;
+      });
+    }
   },
 };
 </script>

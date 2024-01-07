@@ -77,6 +77,9 @@
                   <b-dropdown-item href="/Reportes/Kardex" >
                       Kardex
                   </b-dropdown-item>
+                  <b-dropdown-item href="/Reportes/TopVentas" >
+                      Top Ventas
+                  </b-dropdown-item>
                 </b-dropdown-group>
               </b-nav-item-dropdown>
               <b-nav-item-dropdown text="SuperAdmin" v-if="showSuperAdminMenu">

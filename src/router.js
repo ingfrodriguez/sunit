@@ -280,6 +280,15 @@ export const router = new Router({
       }
     },
     {
+      path: '/Reportes/TopVentas',
+      name: 'TopVentas',
+      // lazy-loaded
+      component: () => import('./views/Reportes/TopVentas.vue'),
+      meta: {
+        title: 'TopVentas'
+      }
+    },
+    {
       path :'*',
       component: () => import('./views/Home.vue'),
     }

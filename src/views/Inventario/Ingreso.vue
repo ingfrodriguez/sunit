@@ -436,11 +436,12 @@ export default {
             url:this.$IPServidor + '/files/'+this.Ingreso.Documento,
           })
       .then(() => {
+        //this.titulo=this.Ingreso.Documento
         window.open(this.$IPServidor + '/files/'+this.Ingreso.Documento, '_blank');        
         this.mensaje = null
       })
       .catch((err) => {
-        this.mensaje = err.response.data.message;
+        this.mensaje = 'No se adjunto Documento en el ingreso. '+err.response.data.message;
               this.successful = false;
       });
     }
